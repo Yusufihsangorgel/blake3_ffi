@@ -7,9 +7,10 @@ import 'package:native_toolchain_c/native_toolchain_c.dart';
 ///
 /// SIMD selection is per target architecture:
 ///
-///   * arm64  -> the NEON kernel (blake3_neon.c). On AArch64 the upstream
-///     headers auto-enable `BLAKE3_USE_NEON`; the define is set explicitly
-///     so the intent is visible in the build.
+///   * arm64  -> the NEON kernel (blake3_neon.c). The upstream headers
+///     auto-enable `BLAKE3_USE_NEON` on AArch64 only when the define is
+///     absent; it is set explicitly here so the intent is visible and the
+///     kernel source is compiled to match.
 ///   * everything else (x86_64, ...) -> the portable C kernel only. The
 ///     x86 SIMD kernels (SSE2/SSE4.1/AVX2/AVX512) need per-source compiler
 ///     flags that the build system cannot express per file yet, so they

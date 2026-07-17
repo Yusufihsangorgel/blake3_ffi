@@ -1,5 +1,7 @@
 # blake3_ffi
 
+![blake3_ffi banner](doc/banner.png)
+
 Fast BLAKE3 cryptographic hashing for Dart, backed by the official BLAKE3
 C implementation over FFI. The native code is compiled automatically at
 build time through Dart build hooks; there is nothing to install and no
