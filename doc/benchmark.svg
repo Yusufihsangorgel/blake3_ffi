@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="360" viewBox="0 0 1100 360" font-family="Menlo, monospace">
+  <rect width="1100" height="360" fill="#0B1220"/>
+  <text x="48" y="52" font-size="24" font-weight="bold" fill="#E2E8F0">Hashing throughput (16 MB, higher is better)</text>
+  <text x="48" y="80" font-size="14" fill="#94A3B8">Measured on Apple Silicon (arm64 NEON), Dart 3.11. MB/s.</text>
+  <g font-size="14">
+    <rect x="270" y="120" width="620" height="30" fill="#38BDF8"/>
+    <text x="60" y="141" fill="#94A3B8">blake3_ffi (native)</text><text x="900" y="141" fill="#38BDF8">2519</text>
+    <rect x="270" y="168" width="48" height="30" fill="#475569"/>
+    <text x="60" y="189" fill="#94A3B8">crypto sha256</text><text x="326" y="189" fill="#E2E8F0">196</text>
+    <rect x="270" y="216" width="45" height="30" fill="#334155"/>
+    <text x="60" y="237" fill="#94A3B8">blake3_dart (pure)</text><text x="323" y="237" fill="#E2E8F0">181</text>
+  </g>
+  <text x="48" y="300" font-size="13.5" fill="#64748B">About 13x the throughput of dart:core sha256 and of the pure-Dart BLAKE3, from the</text>
+  <text x="48" y="320" font-size="13.5" fill="#64748B">same NEON kernel the reference implementation uses. Verified against the official test vectors.</text>
+</svg>

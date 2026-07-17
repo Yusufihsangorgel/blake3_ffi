@@ -56,6 +56,8 @@ NEON, Dart 3.11.0, Apple clang 21). The baseline is SHA-256 from the
 differ by machine and architecture; run the benchmark on your own data
 before drawing conclusions.
 
+![BLAKE3 throughput vs sha256 and pure-Dart](doc/benchmark.png)
+
 Bulk throughput:
 
 | Input | BLAKE3 (this package) | SHA-256 (`crypto`) | Speedup |
