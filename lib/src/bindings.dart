@@ -1,9 +1,13 @@
 import 'dart:ffi';
 
-// Bindings to the vendored BLAKE3 C API and to libc malloc/free. The
-// native library is produced by hook/build.dart, which registers it under
-// the asset id of this library (src/bindings.dart), so every @Native
-// symbol below resolves to it.
+import 'package:ffi/ffi.dart';
+
+// Bindings to the vendored BLAKE3 C API. The native library is produced by
+// hook/build.dart, which registers it under the asset id of this library
+// (src/bindings.dart), so every @Native symbol below resolves to it.
+// Native heap memory goes through the portable package:ffi allocator
+// rather than a direct @Native binding to malloc/free: DynamicLibrary
+// symbol lookup for the C runtime does not resolve on Windows.
 
 /// Initializes a hasher for the default (unkeyed) hash.
 @Native<Void Function(Pointer<Void>)>(symbol: 'blake3_hasher_init')
@@ -61,29 +65,14 @@ external int blake3HasherSize();
 /// call.
 final int hasherSize = blake3HasherSize();
 
-/// Allocates [bytes] of native memory. Throws [StateError] when the
-/// allocation fails.
-Pointer<Uint8> allocateBytes(int bytes) {
-  // malloc(0) may legally return null; always request at least one byte.
-  final pointer = _mallocNative(bytes < 1 ? 1 : bytes);
-  if (pointer == nullptr) {
-    throw StateError('native allocation of $bytes bytes failed');
-  }
-  return pointer.cast<Uint8>();
-}
+/// Allocates [bytes] of native memory. Throws when the allocation fails.
+Pointer<Uint8> allocateBytes(int bytes) =>
+    // malloc(0) may legally return null; always request at least one byte.
+    malloc.allocate<Uint8>(bytes < 1 ? 1 : bytes);
 
 /// Frees memory from [allocateBytes].
-void freeBytes(Pointer<Uint8> pointer) => _freeNative(pointer.cast());
+void freeBytes(Pointer<Uint8> pointer) => malloc.free(pointer);
 
-/// The address of libc `free`, used to release forgotten hashers from a
+/// The native free function, used to release forgotten hashers from a
 /// [NativeFinalizer].
-final Pointer<NativeFinalizerFunction> freeFunction =
-    Native.addressOf<NativeFunction<Void Function(Pointer<Void>)>>(
-      _freeNative,
-    ).cast();
-
-@Native<Pointer<Void> Function(IntPtr)>(symbol: 'malloc')
-external Pointer<Void> _mallocNative(int size);
-
-@Native<Void Function(Pointer<Void>)>(symbol: 'free')
-external void _freeNative(Pointer<Void> pointer);
+final Pointer<NativeFinalizerFunction> freeFunction = malloc.nativeFree;
