@@ -1,0 +1,40 @@
+BLAKE3 C implementation
+=======================
+
+Vendored from the official BLAKE3 reference repository:
+
+    https://github.com/BLAKE3-team/BLAKE3
+    Version: 1.8.5 (from the c/ directory)
+
+BLAKE3 was designed by Jack O'Connor, Jean-Philippe Aumasson, Samuel
+Neves, and Zooko Wilcox-O'Hearn.
+
+License
+-------
+
+This work is released into the public domain with CC0 1.0. Alternatively,
+it is licensed under any of the following:
+
+  * Apache License 2.0                 (LICENSE_A2)
+  * Apache License 2.0 with LLVM       (LICENSE_A2LLVM)
+  * CC0 1.0                            (LICENSE_CC0)
+
+Vendored files
+--------------
+
+Compiled in this package:
+
+  blake3.h, blake3.c, blake3_dispatch.c, blake3_portable.c,
+  blake3_impl.h  (all targets)
+  blake3_neon.c  (arm64 only)
+
+Vendored but not yet compiled (x86-64 SIMD kernels, kept for a future
+release that enables them):
+
+  blake3_sse2.c, blake3_sse41.c, blake3_avx2.c, blake3_avx512.c
+
+The x86-64 assembly variants and the multithreading (TBB) sources from
+upstream are not vendored; they are not used by this package.
+
+No source files were modified. The wrapper that calls into this code lives
+in src/blake3_shim.c and lib/ in the parent package and is MIT licensed.
