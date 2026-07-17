@@ -1,33 +1,44 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="360" viewBox="0 0 1160 360" font-family="Menlo, monospace">
-  <defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#38BDF8"/></marker></defs>
-  <rect width="1160" height="360" fill="#0B1220"/>
-  <text x="44" y="50" font-size="22" font-weight="bold" fill="#E2E8F0">How a hash is computed</text>
-  <rect x="44" y="90" width="270" height="150" rx="10" fill="#0E1A2E" stroke="#1E3A5F"/>
-  <text x="62" y="118" font-size="13" fill="#64748B">DART</text>
-  <text x="62" y="150" font-size="15" fill="#E2E8F0">blake3(bytes)</text>
-  <text x="62" y="176" font-size="13" fill="#94A3B8">Blake3Hasher for streaming,</text>
-  <text x="62" y="196" font-size="13" fill="#94A3B8">keyed and derive-key modes</text>
-  <text x="62" y="222" font-size="12.5" fill="#64748B">bytes passed by pointer, no copy</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="460" viewBox="0 0 1100 460" font-family="Menlo, monospace">
+  <rect width="1100" height="460" fill="#0B1220"/>
+  <text x="60" y="50" font-size="23" font-weight="bold" fill="#E2E8F0">BLAKE3 hashes as a tree, not a chain</text>
+  <text x="60" y="76" font-size="14" fill="#94A3B8">The input splits into chunks; chunks compress independently and combine in pairs up to one root.</text>
 
-  <rect x="380" y="90" width="150" height="150" rx="10" fill="#0E1A2E" stroke="#1E3A5F" stroke-dasharray="5 4"/>
-  <text x="398" y="118" font-size="13" fill="#64748B">dart:ffi</text>
-  <text x="455" y="172" font-size="14" fill="#E2E8F0" text-anchor="middle" transform="rotate(-90 455 172)">C ABI shim</text>
+  <!-- input bar split into chunks -->
+  <text x="60" y="126" font-size="13" fill="#64748B">input, split into 1 KiB chunks</text>
+  <g>
+    <rect x="60" y="136" width="120" height="34" rx="5" fill="#0E1A2E" stroke="#334155"/><text x="120" y="158" font-size="12" fill="#94A3B8" text-anchor="middle">chunk 0</text>
+    <rect x="200" y="136" width="120" height="34" rx="5" fill="#0E1A2E" stroke="#334155"/><text x="260" y="158" font-size="12" fill="#94A3B8" text-anchor="middle">chunk 1</text>
+    <rect x="340" y="136" width="120" height="34" rx="5" fill="#0E1A2E" stroke="#334155"/><text x="400" y="158" font-size="12" fill="#94A3B8" text-anchor="middle">chunk 2</text>
+    <rect x="480" y="136" width="120" height="34" rx="5" fill="#0E1A2E" stroke="#334155"/><text x="540" y="158" font-size="12" fill="#94A3B8" text-anchor="middle">chunk 3</text>
+  </g>
+  <text x="640" y="158" font-size="20" fill="#64748B">...</text>
 
-  <rect x="596" y="90" width="290" height="150" rx="10" fill="#0E1A2E" stroke="#38BDF8"/>
-  <text x="614" y="118" font-size="13" fill="#64748B">NATIVE (build hooks)</text>
-  <text x="614" y="150" font-size="15" fill="#E2E8F0">official BLAKE3, vendored</text>
-  <text x="614" y="176" font-size="13" fill="#94A3B8">arm64 NEON kernel, SSE/AVX on x86,</text>
-  <text x="614" y="196" font-size="13" fill="#94A3B8">portable fallback everywhere else</text>
-  <text x="614" y="222" font-size="12.5" fill="#64748B">tree hash, parallel-friendly</text>
+  <!-- leaf compressions -->
+  <g fill="#111C2E" stroke="#38BDF8">
+    <circle cx="120" cy="230" r="20"/><circle cx="260" cy="230" r="20"/><circle cx="400" cy="230" r="20"/><circle cx="540" cy="230" r="20"/>
+  </g>
+  <g stroke="#38BDF8" stroke-width="2" fill="none">
+    <path d="M120 170 L120 210"/><path d="M260 170 L260 210"/><path d="M400 170 L400 210"/><path d="M540 170 L540 210"/>
+  </g>
 
-  <rect x="952" y="90" width="164" height="150" rx="10" fill="#111C2E" stroke="#1E3A5F"/>
-  <text x="970" y="118" font-size="13" fill="#64748B">OUTPUT</text>
-  <text x="970" y="152" font-size="15" fill="#E2E8F0">32-byte digest</text>
-  <text x="970" y="178" font-size="13" fill="#94A3B8">or any length</text>
-  <text x="970" y="198" font-size="13" fill="#94A3B8">you ask for</text>
+  <!-- parent nodes -->
+  <g fill="#111C2E" stroke="#38BDF8"><circle cx="190" cy="320" r="20"/><circle cx="470" cy="320" r="20"/></g>
+  <g stroke="#38BDF8" stroke-width="2" fill="none">
+    <path d="M120 250 L184 302"/><path d="M260 250 L196 302"/><path d="M400 250 L464 302"/><path d="M540 250 L476 302"/>
+  </g>
 
-  <path d="M314 165 L380 165" stroke="#38BDF8" stroke-width="2" marker-end="url(#a)"/>
-  <path d="M530 165 L596 165" stroke="#38BDF8" stroke-width="2" marker-end="url(#a)"/>
-  <path d="M886 165 L952 165" stroke="#38BDF8" stroke-width="2" marker-end="url(#a)"/>
-  <text x="44" y="300" font-size="13" fill="#64748B">The native kernel is the same code the reference implementation ships, so you get its throughput from Dart.</text>
+  <!-- root -->
+  <circle cx="330" cy="400" r="24" fill="#0E2438" stroke="#38BDF8" stroke-width="2.5"/>
+  <text x="330" y="405" font-size="12" fill="#38BDF8" text-anchor="middle">root</text>
+  <g stroke="#38BDF8" stroke-width="2" fill="none"><path d="M190 340 L318 382"/><path d="M470 340 L342 382"/></g>
+  <path d="M354 400 L470 400" stroke="#38BDF8" stroke-width="2" fill="none" marker-end="url(#a)"/>
+  <defs><marker id="a" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#38BDF8"/></marker></defs>
+  <text x="482" y="396" font-size="14" fill="#E2E8F0">32-byte digest</text>
+  <text x="482" y="416" font-size="12.5" fill="#94A3B8">or any length you ask for</text>
+
+  <text x="720" y="236" font-size="13" fill="#94A3B8">Independent chunks are why one</text>
+  <text x="720" y="256" font-size="13" fill="#94A3B8">kernel (NEON on arm64, SSE/AVX</text>
+  <text x="720" y="276" font-size="13" fill="#94A3B8">on x86) keeps the pipeline full.</text>
+  <text x="720" y="304" font-size="12.5" fill="#64748B">Vendored C, compiled by build hooks,</text>
+  <text x="720" y="324" font-size="12.5" fill="#64748B">reached from Dart over FFI.</text>
 </svg>
