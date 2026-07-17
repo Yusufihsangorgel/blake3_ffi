@@ -1,6 +1,6 @@
 # blake3_ffi
 
-![blake3_ffi banner](doc/banner.png)
+![blake3_ffi banner](https://raw.githubusercontent.com/Yusufihsangorgel/blake3_ffi/main/doc/banner.png)
 
 Fast BLAKE3 cryptographic hashing for Dart, backed by the official BLAKE3
 C implementation over FFI. The native code is compiled automatically at
@@ -56,9 +56,9 @@ NEON, Dart 3.11.0, Apple clang 21). The baseline is SHA-256 from the
 differ by machine and architecture; run the benchmark on your own data
 before drawing conclusions.
 
-![BLAKE3 throughput vs sha256 and pure-Dart](doc/benchmark.png)
+![BLAKE3 throughput vs sha256 and pure-Dart](https://raw.githubusercontent.com/Yusufihsangorgel/blake3_ffi/main/doc/benchmark.png)
 
-![Architecture: Dart to FFI to native BLAKE3](doc/architecture.png)
+![Architecture: Dart to FFI to native BLAKE3](https://raw.githubusercontent.com/Yusufihsangorgel/blake3_ffi/main/doc/architecture.png)
 
 Bulk throughput:
 
@@ -72,16 +72,13 @@ Small inputs (time per call, including FFI overhead):
 
 | Input | BLAKE3 | SHA-256 | Speedup |
 |---|---|---|---|
-| 64 B | 0.17 us | 0.81 us | 4.7x |
-| 1 KB | 0.86 us | 6.23 us | 7.2x |
-| 4 KB | 1.79 us | 23.6 us | 13.2x |
+| 64 B | 0.17 µs | 0.81 µs | 4.7x |
+| 1 KB | 0.86 µs | 6.23 µs | 7.2x |
+| 4 KB | 1.79 µs | 23.6 µs | 13.2x |
 
 The win holds at every size measured here, so there is no small-input
 crossover where the FFI call cost dominates. The largest wins are on bulk
-data, which is where BLAKE3's SIMD tree hashing pays off. Against the only
-published pure-Dart BLAKE3 (`blake3_dart`, not a dependency of this
-package), a separate run measured roughly 22x on bulk data; that package
-runs around 109 MB/s.
+data, which is where BLAKE3's SIMD tree hashing pays off.
 
 ## Keyed hashing and key derivation
 

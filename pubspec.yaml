@@ -4,6 +4,7 @@ description: >-
   streaming, keyed, and key derivation.
 version: 0.1.0
 repository: https://github.com/Yusufihsangorgel/blake3_ffi
+issue_tracker: https://github.com/Yusufihsangorgel/blake3_ffi/issues
 
 topics:
   - blake3
