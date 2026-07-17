@@ -58,6 +58,8 @@ before drawing conclusions.
 
 ![BLAKE3 throughput vs sha256 and pure-Dart](doc/benchmark.png)
 
+![Architecture: Dart to FFI to native BLAKE3](doc/architecture.png)
+
 Bulk throughput:
 
 | Input | BLAKE3 (this package) | SHA-256 (`crypto`) | Speedup |
