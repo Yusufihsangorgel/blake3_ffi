@@ -1,3 +1,10 @@
+## 0.1.2
+
+- Add hex variants for the raw-output paths: `blake3KeyedHex`, `blake3DeriveKeyHex`,
+  and `Blake3Hasher.finalizeHex`. Keyed, derived, and streamed digests now format
+  to hex the way `blake3Hex` already does, so callers stop re-implementing it (the
+  example used to).
+
 ## 0.1.1
 
 - Docs: sharpen the pub.dev description to lead with the value and the terms people search.

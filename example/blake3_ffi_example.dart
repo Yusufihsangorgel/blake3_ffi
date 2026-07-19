@@ -15,16 +15,17 @@ void main() {
   final digest = hashFile(File(Platform.script.toFilePath()));
   print('this file        = $digest');
 
-  // Keyed hashing (a MAC): both sides share a 32-byte key.
+  // Keyed hashing (a MAC): both sides share a 32-byte key. The *Hex variants
+  // return the digest as hex directly, so there is no formatting to write.
   final key = Uint8List.fromList(List<int>.generate(32, (i) => i));
-  print('keyed("...dog")  = ${_hex(blake3Keyed(key, message))}');
+  print('keyed("...dog")  = ${blake3KeyedHex(key, message)}');
 
   // Key derivation: turn a shared secret into a purpose-bound subkey.
-  final subkey = blake3DeriveKey(
+  final subkey = blake3DeriveKeyHex(
     'example.com 2026 session cookie v1',
     utf8.encode('master secret'),
   );
-  print('derived key      = ${_hex(subkey)}');
+  print('derived key      = $subkey');
 }
 
 /// Streams [file] through a [Blake3Hasher] 64 KiB at a time, so memory use
@@ -43,20 +44,8 @@ String hashFile(File file) {
     } finally {
       handle.closeSync();
     }
-    return _hex(hasher.finalize());
+    return hasher.finalizeHex();
   } finally {
     hasher.dispose();
   }
-}
-
-const String _hexDigits = '0123456789abcdef';
-
-String _hex(Uint8List bytes) {
-  final buffer = StringBuffer();
-  for (final byte in bytes) {
-    buffer
-      ..write(_hexDigits[byte >> 4])
-      ..write(_hexDigits[byte & 0xf]);
-  }
-  return buffer.toString();
 }

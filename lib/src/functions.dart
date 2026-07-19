@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'bindings.dart';
 import 'hasher.dart';
+import 'hex.dart';
 
 /// Hashes [data] with BLAKE3 and returns [outputLength] bytes (32 by
 /// default; larger values give the extendable output).
@@ -16,7 +17,7 @@ Uint8List blake3(Uint8List data, {int outputLength = blake3OutLength}) =>
 
 /// Like [blake3] but returns the digest as a lowercase hex string.
 String blake3Hex(Uint8List data, {int outputLength = blake3OutLength}) =>
-    _toHex(blake3(data, outputLength: outputLength));
+    toHex(blake3(data, outputLength: outputLength));
 
 /// Keyed BLAKE3 (a MAC / PRF). [key] must be exactly [blake3KeyLength]
 /// (32) bytes.
@@ -45,6 +46,14 @@ Uint8List blake3Keyed(
   });
 }
 
+/// Like [blake3Keyed] but returns the MAC as a lowercase hex string.
+String blake3KeyedHex(
+  Uint8List key,
+  Uint8List data, {
+  int outputLength = blake3OutLength,
+}) =>
+    toHex(blake3Keyed(key, data, outputLength: outputLength));
+
 /// BLAKE3 key derivation (KDF mode). [context] is a hardcoded,
 /// application-specific domain separation string; [keyMaterial] is the
 /// input keying material. Returns [outputLength] derived bytes.
@@ -67,6 +76,14 @@ Uint8List blake3DeriveKey(
   });
 }
 
+/// Like [blake3DeriveKey] but returns the derived key as a lowercase hex string.
+String blake3DeriveKeyHex(
+  String context,
+  Uint8List keyMaterial, {
+  int outputLength = blake3OutLength,
+}) =>
+    toHex(blake3DeriveKey(context, keyMaterial, outputLength: outputLength));
+
 /// Runs init/update/finalize on a native hasher without the [Finalizable]
 /// wrapper: the whole lifetime is bounded by this call, so a plain
 /// try/finally frees it and avoids the finalizer bookkeeping in the
@@ -84,16 +101,4 @@ Uint8List _oneShot(
   } finally {
     freeBytes(hasher.cast());
   }
-}
-
-const String _hexDigits = '0123456789abcdef';
-
-String _toHex(Uint8List bytes) {
-  final buffer = StringBuffer();
-  for (final byte in bytes) {
-    buffer
-      ..write(_hexDigits[byte >> 4])
-      ..write(_hexDigits[byte & 0xf]);
-  }
-  return buffer.toString();
 }

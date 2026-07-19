@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'bindings.dart';
+import 'hex.dart';
 
 /// The length in bytes of a BLAKE3 key (keyed mode).
 const int blake3KeyLength = 32;
@@ -117,6 +118,11 @@ final class Blake3Hasher implements Finalizable {
     _checkNotDisposed();
     return finalizeHasher(_hasher, outputLength, seek);
   }
+
+  /// Like [finalize] but returns the output as a lowercase hex string, so a
+  /// streamed digest formats the same way [blake3Hex] does.
+  String finalizeHex({int outputLength = blake3OutLength, int seek = 0}) =>
+      toHex(finalize(outputLength: outputLength, seek: seek));
 
   /// Resets the hasher to its just-created state, keeping the same mode
   /// and key. Lets you reuse one hasher for many independent inputs

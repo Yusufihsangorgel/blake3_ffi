@@ -35,6 +35,31 @@ void main() {
       expect(hex, matches(RegExp(r'^[0-9a-f]+$')));
       expect(hex, _hex(blake3(data)));
     });
+
+    test('blake3KeyedHex agrees with blake3Keyed', () {
+      final key = randomBytes(32);
+      final data = randomBytes(64);
+      expect(blake3KeyedHex(key, data), _hex(blake3Keyed(key, data)));
+    });
+
+    test('blake3DeriveKeyHex agrees with blake3DeriveKey', () {
+      final material = randomBytes(48);
+      const context = 'blake3_ffi test 2026';
+      expect(
+        blake3DeriveKeyHex(context, material),
+        _hex(blake3DeriveKey(context, material)),
+      );
+    });
+
+    test('Blake3Hasher.finalizeHex agrees with finalize', () {
+      final data = randomBytes(200);
+      final hasher = Blake3Hasher()..update(data);
+      try {
+        expect(hasher.finalizeHex(), _hex(hasher.finalize()));
+      } finally {
+        hasher.dispose();
+      }
+    });
   });
 
   group('streaming', () {
