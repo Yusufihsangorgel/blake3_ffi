@@ -1,8 +1,9 @@
 name: blake3_ffi
 description: >-
-  Fast BLAKE3 cryptographic hashing for Dart via native FFI. One-shot,
-  streaming, keyed, and key derivation.
-version: 0.1.0
+  BLAKE3 hashing for Dart over native FFI, up to 14x faster than SHA-256. One-
+  shot, streaming, keyed (MAC), and key derivation. C auto-compiled at build, no
+  binaries to ship.
+version: 0.1.1
 repository: https://github.com/Yusufihsangorgel/blake3_ffi
 issue_tracker: https://github.com/Yusufihsangorgel/blake3_ffi/issues
 
