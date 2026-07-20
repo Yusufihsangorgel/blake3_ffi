@@ -13,5 +13,13 @@
 library;
 
 export 'src/functions.dart'
-    show blake3, blake3DeriveKey, blake3DeriveKeyHex, blake3Hex, blake3Keyed, blake3KeyedHex;
+    show
+        blake3,
+        blake3DeriveKey,
+        blake3DeriveKeyHex,
+        blake3Hex,
+        blake3HexStream,
+        blake3Keyed,
+        blake3KeyedHex,
+        blake3Stream;
 export 'src/hasher.dart' show Blake3Hasher, blake3KeyLength, blake3OutLength;

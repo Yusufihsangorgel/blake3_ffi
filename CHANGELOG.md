@@ -1,3 +1,13 @@
+## 0.2.0
+
+- Add `blake3Stream` and `blake3HexStream`: one call to hash a
+  `Stream<List<int>>` (a file's `openRead()`, an upload, any byte stream) as it
+  arrives, without holding the whole input in memory. Each drives a
+  `Blake3Hasher` internally and disposes it when the stream ends. This is the
+  memory-safe way to hash something too large to load at once, and unlike a
+  SHA-256 stream from `package:crypto` it runs at BLAKE3's throughput. The
+  `outputLength` (XOF) argument carries through.
+
 ## 0.1.2
 
 - Add hex variants for the raw-output paths: `blake3KeyedHex`, `blake3DeriveKeyHex`,

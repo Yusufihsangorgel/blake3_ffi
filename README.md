@@ -9,7 +9,8 @@ prebuilt binary to ship.
 
 - One-shot hashing of a byte buffer.
 - Incremental (streaming) hashing for data that arrives in pieces or does
-  not fit in memory.
+  not fit in memory, either through `Blake3Hasher` or the one-call
+  `blake3Stream` over a `Stream<List<int>>`.
 - Keyed hashing (a MAC / PRF) and key derivation (KDF).
 - Extendable output (XOF): request any number of output bytes.
 
@@ -33,6 +34,25 @@ void main() {
   }
 }
 ```
+
+## Hashing a file or stream
+
+To hash something too large to load at once, pass its byte stream to
+`blake3Stream` (or `blake3HexStream`). It drives a `Blake3Hasher` for you and
+disposes it when the stream ends, so the input is never held in memory all at
+once:
+
+```dart
+import 'dart:io';
+import 'package:blake3_ffi/blake3_ffi.dart';
+
+Future<String> hashFile(String path) =>
+    blake3HexStream(File(path).openRead());
+```
+
+This is the same job as binding a `Stream` to a `crypto` SHA-256 sink, but it
+runs at BLAKE3's throughput, which is where the win over SHA-256 is largest (see
+below).
 
 ## What BLAKE3 is, and why native
 

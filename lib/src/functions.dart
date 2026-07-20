@@ -102,3 +102,41 @@ Uint8List _oneShot(
     freeBytes(hasher.cast());
   }
 }
+
+/// Hashes the bytes of [data] with BLAKE3 as they arrive and returns
+/// [outputLength] bytes, without ever holding the whole input in memory.
+///
+/// This is the streaming counterpart to [blake3]: hand it a file's byte stream
+/// (`File(path).openRead()`) or any other `Stream<List<int>>` and it is hashed
+/// chunk by chunk through a single [Blake3Hasher], which is disposed when the
+/// stream ends. It is the memory-safe way to hash something too large to load at
+/// once (a big upload, an archive, a disk image), and unlike a SHA-256 stream
+/// from `package:crypto` it runs at BLAKE3's speed.
+///
+/// ```dart
+/// final digest = await blake3Stream(File('big.iso').openRead());
+/// ```
+Future<Uint8List> blake3Stream(
+  Stream<List<int>> data, {
+  int outputLength = blake3OutLength,
+}) async {
+  final hasher = Blake3Hasher();
+  try {
+    await for (final chunk in data) {
+      hasher.update(chunk is Uint8List ? chunk : Uint8List.fromList(chunk));
+    }
+    return hasher.finalize(outputLength: outputLength);
+  } finally {
+    hasher.dispose();
+  }
+}
+
+/// Like [blake3Stream] but returns the digest as a lowercase hex string; see
+/// [blake3Hex] for the one-shot equivalent.
+Future<String> blake3HexStream(
+  Stream<List<int>> data, {
+  int outputLength = blake3OutLength,
+}) async {
+  final digest = await blake3Stream(data, outputLength: outputLength);
+  return toHex(digest);
+}
