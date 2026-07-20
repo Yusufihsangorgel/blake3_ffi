@@ -3,7 +3,7 @@ description: >-
   BLAKE3 hashing for Dart over native FFI, up to 14x faster than SHA-256. One-
   shot, streaming, keyed (MAC), and key derivation. C auto-compiled at build, no
   binaries to ship.
-version: 0.2.0
+version: 0.2.1
 repository: https://github.com/Yusufihsangorgel/blake3_ffi
 issue_tracker: https://github.com/Yusufihsangorgel/blake3_ffi/issues
 
@@ -13,6 +13,12 @@ topics:
   - cryptography
   - ffi
   - performance
+
+screenshots:
+  - description: >-
+      Hashing throughput over 16 MB, measured on Apple Silicon: 2519 MB/s
+      against 196 for dart:core sha256 and 181 for pure-Dart BLAKE3.
+    path: doc/benchmark.png
 
 environment:
   sdk: ^3.10.0
