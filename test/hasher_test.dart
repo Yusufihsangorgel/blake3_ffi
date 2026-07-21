@@ -80,6 +80,17 @@ void main() {
       }
     });
 
+    test('update accepts a plain List<int>, not just Uint8List', () {
+      // Chunks from a Stream<List<int>> (File.openRead) arrive as List<int>.
+      final chunk = <int>[104, 101, 108, 108, 111]; // 'hello'
+      final hasher = Blake3Hasher()..update(chunk);
+      try {
+        expect(hasher.finalize(), blake3(Uint8List.fromList(chunk)));
+      } finally {
+        hasher.dispose();
+      }
+    });
+
     test('finalize can be called repeatedly and after more updates', () {
       final hasher = Blake3Hasher()..update(randomBytes(100));
       try {

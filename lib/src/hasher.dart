@@ -98,10 +98,14 @@ final class Blake3Hasher implements Finalizable {
 
   /// Feeds [data] into the hasher. May be called any number of times.
   ///
+  /// Accepts any `List<int>`, so chunks straight from a `Stream<List<int>>`
+  /// (a file's `openRead()`, a socket) feed in without wrapping. A
+  /// [Uint8List] passes through untouched; any other list is copied once.
+  ///
   /// Throws [StateError] if the hasher has been disposed.
-  void update(Uint8List data) {
+  void update(List<int> data) {
     _checkNotDisposed();
-    updateHasher(_hasher, data);
+    updateHasher(_hasher, data is Uint8List ? data : Uint8List.fromList(data));
   }
 
   /// Returns [outputLength] bytes of hash output.

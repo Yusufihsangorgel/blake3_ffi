@@ -1,3 +1,13 @@
+## 0.3.0
+
+- `Blake3Hasher.update` now takes a `List<int>` instead of a `Uint8List`.
+  Chunks from a `Stream<List<int>>` (a file's `openRead()`, a socket) arrive
+  as plain `List<int>`, so the documented manual streaming loop did not
+  compile without wrapping every chunk in `Uint8List.fromList`. A `Uint8List`
+  still passes through with no copy; any other list is copied once, the same
+  coercion `blake3Stream` already does. Source-compatible: `Uint8List` is a
+  `List<int>`.
+
 ## 0.2.2
 
 - Widen the native-toolchain constraints so the package can be installed in a
