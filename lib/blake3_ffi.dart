@@ -21,5 +21,6 @@ export 'src/functions.dart'
         blake3HexStream,
         blake3Keyed,
         blake3KeyedHex,
-        blake3Stream;
+        blake3Stream,
+        blake3StreamHex;
 export 'src/hasher.dart' show Blake3Hasher, blake3KeyLength, blake3OutLength;

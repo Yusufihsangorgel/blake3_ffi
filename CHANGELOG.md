@@ -1,3 +1,11 @@
+## 0.4.0
+
+- Rename `blake3HexStream` to `blake3StreamHex` so the hex variant is a `Hex`
+  suffix on its base name, matching every other pair in the API: `blake3` and
+  `blake3Hex`, `blake3Keyed` and `blake3KeyedHex`, `blake3DeriveKey` and
+  `blake3DeriveKeyHex`. `blake3HexStream` still works as a deprecated alias
+  that forwards to `blake3StreamHex`, and will be removed in 1.0.0.
+
 ## 0.3.1
 
 - Declare `platforms: {linux, macos, windows}` in `pubspec.yaml`. Flutter's

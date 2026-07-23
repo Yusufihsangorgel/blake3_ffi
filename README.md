@@ -38,7 +38,7 @@ void main() {
 ## Hashing a file or stream
 
 To hash something too large to load at once, pass its byte stream to
-`blake3Stream` (or `blake3HexStream`). It drives a `Blake3Hasher` for you and
+`blake3Stream` (or `blake3StreamHex`). It drives a `Blake3Hasher` for you and
 disposes it when the stream ends, so the input is never held in memory all at
 once:
 
@@ -47,7 +47,7 @@ import 'dart:io';
 import 'package:blake3_ffi/blake3_ffi.dart';
 
 Future<String> hashFile(String path) =>
-    blake3HexStream(File(path).openRead());
+    blake3StreamHex(File(path).openRead());
 ```
 
 This is the same job as binding a `Stream` to a `crypto` SHA-256 sink, but it

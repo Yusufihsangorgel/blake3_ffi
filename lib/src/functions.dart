@@ -131,10 +131,19 @@ Future<Uint8List> blake3Stream(
 
 /// Like [blake3Stream] but returns the digest as a lowercase hex string; see
 /// [blake3Hex] for the one-shot equivalent.
-Future<String> blake3HexStream(
+Future<String> blake3StreamHex(
   Stream<List<int>> data, {
   int outputLength = blake3OutLength,
 }) async {
   final digest = await blake3Stream(data, outputLength: outputLength);
   return toHex(digest);
 }
+
+/// Renamed to [blake3StreamHex] so the hex variant is a `Hex` suffix on its
+/// base name, matching `blake3`/`blake3Hex`, `blake3Keyed`/`blake3KeyedHex`
+/// and `blake3DeriveKey`/`blake3DeriveKeyHex`.
+@Deprecated('Use blake3StreamHex instead. Will be removed in 1.0.0.')
+Future<String> blake3HexStream(
+  Stream<List<int>> data, {
+  int outputLength = blake3OutLength,
+}) => blake3StreamHex(data, outputLength: outputLength);

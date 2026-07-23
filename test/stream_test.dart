@@ -35,10 +35,19 @@ void main() {
     }
   });
 
-  test('blake3HexStream matches blake3Hex', () async {
+  test('blake3StreamHex matches blake3Hex', () async {
     final data = sample(20000);
-    expect(await blake3HexStream(chunked(data, 333)), blake3Hex(data));
+    expect(await blake3StreamHex(chunked(data, 333)), blake3Hex(data));
   });
+
+  test(
+    'deprecated blake3HexStream still forwards to blake3StreamHex',
+    () async {
+      final data = sample(20000);
+      // ignore: deprecated_member_use_from_same_package
+      expect(await blake3HexStream(chunked(data, 333)), blake3Hex(data));
+    },
+  );
 
   test('hashing a file stream matches hashing its bytes', () async {
     final dir = Directory.systemTemp.createTempSync('blake3_stream_test');
