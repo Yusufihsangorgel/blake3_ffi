@@ -51,8 +51,7 @@ String blake3KeyedHex(
   Uint8List key,
   Uint8List data, {
   int outputLength = blake3OutLength,
-}) =>
-    toHex(blake3Keyed(key, data, outputLength: outputLength));
+}) => toHex(blake3Keyed(key, data, outputLength: outputLength));
 
 /// BLAKE3 key derivation (KDF mode). [context] is a hardcoded,
 /// application-specific domain separation string; [keyMaterial] is the
@@ -81,8 +80,7 @@ String blake3DeriveKeyHex(
   String context,
   Uint8List keyMaterial, {
   int outputLength = blake3OutLength,
-}) =>
-    toHex(blake3DeriveKey(context, keyMaterial, outputLength: outputLength));
+}) => toHex(blake3DeriveKey(context, keyMaterial, outputLength: outputLength));
 
 /// Runs init/update/finalize on a native hasher without the [Finalizable]
 /// wrapper: the whole lifetime is bounded by this call, so a plain
