@@ -3,7 +3,7 @@ description: >-
   BLAKE3 hashing for Dart over native FFI, up to 14x faster than SHA-256. One-
   shot, streaming, keyed (MAC), and key derivation. C auto-compiled at build, no
   binaries to ship.
-version: 0.3.0
+version: 0.3.1
 repository: https://github.com/Yusufihsangorgel/blake3_ffi
 issue_tracker: https://github.com/Yusufihsangorgel/blake3_ffi/issues
 
@@ -22,6 +22,20 @@ screenshots:
 
 environment:
   sdk: ^3.10.0
+
+# Overrides pub.dev's static-analysis-derived platform tags. Without this,
+# pana infers android/ios support from the transitive import graph alone,
+# which cannot see that hook/build.dart has never been exercised on either
+# platform (no CI job, no test run) and that Flutter's build-hooks/
+# native-assets support isn't stable yet. Only list what's actually
+# verified: CI (.github/workflows/ci.yaml) covers linux/macos/windows, and
+# hook/build.dart's own CBuilder invocation has only ever run there.
+# Add android/ios back here once Flutter build-hooks are stable AND this
+# package has a real, tested build for them.
+platforms:
+  linux:
+  macos:
+  windows:
 
 dependencies:
   code_assets: ^1.2.1

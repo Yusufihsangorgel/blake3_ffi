@@ -1,3 +1,10 @@
+## 0.3.1
+
+- Declare `platforms: {linux, macos, windows}` in `pubspec.yaml`. Flutter's
+  build-hooks support isn't stable yet and this package has no Android/iOS
+  build today; pub.dev had inferred support for all five platforms from
+  static analysis alone with no declaration to override it.
+
 ## 0.3.0
 
 - `Blake3Hasher.update` now takes a `List<int>` instead of a `Uint8List`.
