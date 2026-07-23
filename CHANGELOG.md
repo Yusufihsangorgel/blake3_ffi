@@ -1,3 +1,17 @@
+## 1.0.0
+
+First stable release. The public API is now committed to semantic versioning:
+the hashing functions, `Blake3Hasher`, and the `blake3KeyLength` /
+`blake3OutLength` constants will not change in a breaking way without a 2.0.0.
+The package covers all three BLAKE3 modes (hash, keyed, and key derivation),
+extendable output through `finalize(outputLength:, seek:)`, and one-shot,
+incremental, and streaming hashing, all over the official BLAKE3 C sources
+compiled from a build hook.
+
+- `blake3HexStream` remains as a deprecated alias for `blake3StreamHex` (the
+  0.4.0 rename) and now points at removal in 2.0.0 rather than 1.0.0, so code
+  written against 0.4.0 keeps working across the 1.0.0 boundary.
+
 ## 0.4.0
 
 - Rename `blake3HexStream` to `blake3StreamHex` so the hex variant is a `Hex`

@@ -142,7 +142,7 @@ Future<String> blake3StreamHex(
 /// Renamed to [blake3StreamHex] so the hex variant is a `Hex` suffix on its
 /// base name, matching `blake3`/`blake3Hex`, `blake3Keyed`/`blake3KeyedHex`
 /// and `blake3DeriveKey`/`blake3DeriveKeyHex`.
-@Deprecated('Use blake3StreamHex instead. Will be removed in 1.0.0.')
+@Deprecated('Use blake3StreamHex instead. Will be removed in 2.0.0.')
 Future<String> blake3HexStream(
   Stream<List<int>> data, {
   int outputLength = blake3OutLength,
