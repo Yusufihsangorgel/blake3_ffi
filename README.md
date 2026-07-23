@@ -154,9 +154,13 @@ Requires Dart 3.10+ with build hooks (`dart run`, `dart test`, and
 `dart build` compile the C automatically; a C toolchain must be present:
 Xcode CLT, gcc/clang, or MSVC).
 
-| Target | Kernel in this release | Status |
+Supported platforms are the desktop targets the pubspec declares: Linux,
+macOS, and Windows on the Dart VM. The rows below describe which CPU
+architecture uses which kernel, not additional platforms.
+
+| Architecture | Kernel in this release | Status |
 |---|---|---|
-| arm64 (macOS, Linux, iOS, Android) | NEON SIMD | Developed and tested on macOS arm64; CI covers macOS arm64 |
+| arm64 (macOS, Linux) | NEON SIMD | Developed and tested on macOS arm64; CI covers macOS arm64 |
 | x86-64 (Linux, macOS, Windows) | Portable C | Correct (passes the official vectors); CI covers Linux and Windows x64 |
 
 Correctness is identical on both paths: every target passes the official
@@ -164,7 +168,8 @@ BLAKE3 test vectors. The difference is throughput. The x86-64 SIMD kernels
 (SSE2/SSE4.1/AVX2/AVX512) are vendored in `src/third_party/blake3/` but not
 yet compiled, because they need per-source compiler flags the build system
 cannot express per file today; enabling them is planned for a later
-release. Flutter support arrives when build hooks land in stable Flutter.
+release. There is no Flutter, iOS, or Android support yet; it arrives when
+build hooks land in stable Flutter.
 
 ## Correctness
 
