@@ -1,3 +1,9 @@
+## 1.0.2
+
+- Add `example/README.md` for pub.dev's Example tab (it was empty). It walks
+  through the four things the package does — one-shot hash, streaming file hash,
+  keyed MAC, key derivation — with the example's real output. Docs only.
+
 ## 1.0.1
 
 - Fix the bulk benchmark's 1 MB row, which was a measurement artifact rather
