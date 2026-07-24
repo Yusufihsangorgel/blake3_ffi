@@ -84,9 +84,16 @@ Bulk throughput:
 
 | Input | BLAKE3 (this package) | SHA-256 (`crypto`) | Speedup |
 |---|---|---|---|
-| 1 MB | 1329 MB/s | 184 MB/s | 7.2x |
+| 1 MB | 2451 MB/s | 174 MB/s | 14.0x |
 | 16 MB | 2519 MB/s | 181 MB/s | 13.9x |
 | 64 MB | 2490 MB/s | 177 MB/s | 14.0x |
+
+Bulk throughput is essentially flat from 1 MB up: once the input clears BLAKE3's
+internal block size, the per-call and FFI overheads are already amortized, so all
+three rows land near 14x. (An earlier version of this table showed 1 MB at 7.2x;
+that was a benchmark artifact — `bench/bench.dart` hashed only a few megabytes at
+that size, too little to average out scheduling jitter, and the fixed benchmark
+now scales the iteration count so every size hashes a comparable total volume.)
 
 Small inputs (time per call, including FFI overhead):
 

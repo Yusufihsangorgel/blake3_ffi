@@ -17,11 +17,16 @@ void main() {
   );
   for (final megabytes in [1, 16, 64]) {
     final data = _randomBytes(megabytes * 1024 * 1024);
-    final blake3Time = _measure(() => blake3(data), warmup: 2, runs: 4);
+    // Scale the iteration count so every size hashes a similar total volume
+    // (~256 MB). With a flat `runs: 4` the 1 MB row hashed only 4 MB per batch,
+    // too little to average out scheduling jitter, so its throughput swung by
+    // 2x from run to run while 16 MB and 64 MB were steady.
+    final runs = (256 / megabytes).ceil(); // 256, 16, 4
+    final blake3Time = _measure(() => blake3(data), warmup: runs, runs: runs);
     final sha256Time = _measure(
       () => crypto.sha256.convert(data),
-      warmup: 2,
-      runs: 4,
+      warmup: runs,
+      runs: runs,
     );
     print(
       '  ${'${megabytes}MB'.padLeft(8)}'

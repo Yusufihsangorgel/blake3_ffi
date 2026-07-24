@@ -1,3 +1,14 @@
+## 1.0.1
+
+- Fix the bulk benchmark's 1 MB row, which was a measurement artifact rather
+  than a real number. `bench/bench.dart` hashed a flat four iterations per size,
+  so the 1 MB case timed only a few megabytes — too little to average out
+  scheduling jitter, and its throughput swung roughly 2x from run to run while
+  16 MB and 64 MB were steady. The benchmark now scales the iteration count so
+  every size hashes a comparable total volume, and 1 MB lands near 14x like the
+  larger sizes, not the 7.2x the README used to show. Benchmark and docs only;
+  no library change.
+
 ## 1.0.0
 
 First stable release. The public API is now committed to semantic versioning:
