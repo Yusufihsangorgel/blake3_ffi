@@ -23,4 +23,5 @@ export 'src/functions.dart'
         blake3KeyedHex,
         blake3Stream,
         blake3StreamHex;
+export 'src/crypto_hash.dart' show Blake3Hash, blake3Hash;
 export 'src/hasher.dart' show Blake3Hasher, blake3KeyLength, blake3OutLength;
