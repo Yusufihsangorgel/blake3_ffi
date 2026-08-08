@@ -144,6 +144,33 @@ final tail = Blake3Hasher()
 // tail.finalize(seek: 32, outputLength: 32) == long bytes 32..63
 ```
 
+## Dropping into code that takes a `Hash`
+
+`blake3(bytes)` is the direct way to hash here and it stays the shortest one.
+The case this section is about is different: code you did not write that takes
+a `package:crypto` `Hash` — a checksum helper, a content-addressed cache, an
+`Hmac`. `blake3Hash` is BLAKE3 wearing that interface, so those call sites can
+change algorithm without changing shape.
+
+```dart
+import 'package:blake3_ffi/blake3_ffi.dart';
+import 'package:crypto/crypto.dart';
+
+Digest checksum(List<int> bytes, {Hash algorithm = sha256}) =>
+    algorithm.convert(bytes);
+
+checksum(bytes, algorithm: blake3Hash); // same function, faster hash
+```
+
+It behaves the way the interface expects: `blockSize` is 64, the same as
+SHA-256, so `Hmac` pads correctly; `startChunkedConversion` streams through a
+`Blake3Hasher` and releases it on close; and one-shot `convert` skips the sink
+entirely. `Digest` holds 32 bytes, which is BLAKE3's default — for the longer
+outputs BLAKE3 can produce, call `blake3` with `outputLength` instead.
+
+The digest is the same either way, and a test pins that: if the `Hash` view and
+`blake3()` ever disagreed, the view would quietly be a different algorithm.
+
 ## API notes
 
 - `finalize()` does not consume the hasher: you may keep calling `update`

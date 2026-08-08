@@ -1,3 +1,20 @@
+## 1.1.0
+
+- **Add `blake3Hash`, BLAKE3 as a `package:crypto` `Hash`.** `blake3(bytes)`
+  was already the shortest way to hash here, so this is not for that. It is for
+  the call sites you do not own: a checksum helper, a content-addressed cache
+  or an `Hmac` that takes a `Hash` parameter can now be handed BLAKE3 without
+  changing shape. `blockSize` is 64, matching SHA-256, so `Hmac` pads
+  correctly; `startChunkedConversion` streams through a `Blake3Hasher` and
+  releases it on close; and one-shot `convert` is overridden to skip the sink.
+  A test pins the two paths against `blake3()` — a `Hash` view that drifted
+  from the direct call would quietly be a different algorithm. Nine tests
+  cover it, and each of five deliberate defects in the new code turns the
+  suite red.
+- `crypto` moves from a dev dependency to a dependency, since the `Hash` type
+  is now part of this package's surface. It is pure Dart and already resolved
+  in most trees.
+
 ## 1.0.2
 
 - Add `example/README.md` for pub.dev's Example tab (it was empty). It walks
