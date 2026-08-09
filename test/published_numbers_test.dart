@@ -1,11 +1,20 @@
-// Every figure this package publishes traces back to doc/benchmark.json. The
-// README tables are written from it by tool/readme_tables.dart and the chart by
-// tool/benchmark_svg.dart, but the prose figures, the pubspec screenshot
-// caption and the chart text are still typed, and the generated files still
-// have to be regenerated after a re-measurement. This test is what makes
-// forgetting either one a build failure rather than something a reader finds:
-// three artifacts once carried three different numbers for the same row, and
-// one of them named the wrong baseline entirely.
+// The README tables are written from doc/benchmark.json by
+// tool/readme_tables.dart and the chart by tool/benchmark_svg.dart, but the
+// prose figures, the pubspec screenshot caption and the chart text are still
+// typed, and the generated files still have to be regenerated after a
+// re-measurement. This test is what makes forgetting either one a build
+// failure rather than something a reader finds: three artifacts once carried
+// three different numbers for the same row, and one of them named the wrong
+// baseline entirely.
+//
+// It is a guard on the figures, not on the sentences around them. A mutation
+// audit of eleven single-edit drifts killed three and let eight through: the
+// input size and machine in the pubspec caption, the baseline versions in the
+// caption and in the prose, a caption that keeps all three figures but hands
+// them to the wrong engines, the input size in the opening paragraph, and two
+// prose claims in "Performance, honestly". doc/benchmark.png survived too, and
+// that is the chart a reader actually sees; only the SVG it is rendered from
+// is checked here, because rsvg-convert is not available on every CI runner.
 //
 // It checks agreement with doc/benchmark.json, not that the numbers are right
 // for the machine running the test, so it is stable on CI. To change the
@@ -145,7 +154,8 @@ void main() {
       greaterThanOrEqualTo(1000),
       reason:
           'README says a 1 MiB call costs three orders of magnitude more '
-          'than the 64-byte row, which bounds the fixed cost of a call',
+          'than the 64-byte row, which is what makes those rows a measure '
+          'of the kernel rather than of the call',
     );
   });
 

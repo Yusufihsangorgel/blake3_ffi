@@ -9,10 +9,12 @@ untouched.
   looked at one of the seven rows. `tool/readme_tables.dart` writes them from
   `doc/benchmark.json`, `tool/benchmark_svg.dart` draws the chart through the
   same helpers so the two cannot round one measurement differently, and
-  `test/published_numbers_test.dart` now covers every published figure: both
-  tables, the prose figures, the pubspec caption and the chart text. Six
-  deliberate edits, one published figure each and two of them in rows the old
-  test never read, all fail it.
+  `test/published_numbers_test.dart` now compares the whole generated block and
+  looks for the headline figures where they are still typed: the README prose,
+  the pubspec description and caption, and the chart's SVG. Six deliberate
+  edits, one published figure each and two of them in rows the old test never
+  read, all fail it. The words around those figures are not checked, and
+  neither is `doc/benchmark.png`.
 - Input sizes are labelled in binary units. A 1,048,576-byte buffer was called
   "1 MB" one line below "MB means 1,000,000 bytes"; the rows are 1, 16 and
   64 MiB, and throughput stays in decimal MB/s.

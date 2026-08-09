@@ -79,7 +79,7 @@ Dart has two. [`blake3_dart`][blake3_dart] is pure Dart: no toolchain, and it
 runs everywhere Dart does, web and Flutter mobile included. This package
 compiles the reference C instead. That buys throughput and costs reach: it
 needs a C compiler at build time and targets Linux, macOS and Windows on the
-Dart VM — not Flutter, on any platform, until build hooks are stable there.
+Dart VM. Flutter is out on every platform until build hooks are stable there.
 
 At 16 MiB on an Apple M4 Pro, this package hashed 2226 MB/s against 100 MB/s for
 the pure-Dart path (blake3_dart 1.0.0): a factor of 22. Both return the same
@@ -95,13 +95,13 @@ point.
 ## Performance, honestly
 
 `bench/bench.dart` measures, and writes `doc/benchmark.json`. The two tables
-below are written from that file by `tool/readme_tables.dart`, and the chart is
-drawn from it by `tool/benchmark_svg.dart`. The figures this section quotes in
-prose, the ones in the pubspec's screenshot caption and the ones on the chart
-are all checked against that same file by `test/published_numbers_test.dart`,
-so a number that drifts fails the build instead of reaching a reader. Your own
-numbers will differ by machine and architecture; run the benchmark on your data
-before drawing conclusions.
+below are written from that file by `tool/readme_tables.dart`, and the chart by
+`tool/benchmark_svg.dart`. `test/published_numbers_test.dart` compares the
+generated block against a fresh render, and looks for the headline figures
+wherever they are still typed by hand: the opening paragraph, "Which BLAKE3
+package", the pubspec description and screenshot caption, and
+`doc/benchmark.svg`. Your own numbers will differ by machine and architecture;
+run the benchmark on your data before drawing conclusions.
 
 ![BLAKE3 throughput against pure Dart and SHA-256](https://raw.githubusercontent.com/Yusufihsangorgel/blake3_ffi/main/doc/benchmark.png)
 
@@ -133,8 +133,7 @@ Small inputs, microseconds per call including FFI overhead:
 
 Bulk throughput is flat from 1 MiB up. The 64-byte row is an upper bound on
 what a call costs before any hashing happens, and a 1 MiB call costs three
-orders of magnitude more, so what these rows measure is the kernel rather than
-the call.
+orders of magnitude more. These rows measure the kernel rather than the call.
 
 There is no small-input crossover where the FFI call cost takes the win back:
 even at 64 bytes, where that cost is most of the work, the native path stays
@@ -189,9 +188,9 @@ final tail = Blake3Hasher()
 
 `blake3(bytes)` is the direct way to hash here and it stays the shortest one.
 The case this section is about is different: code you did not write that takes
-a `package:crypto` `Hash` — a checksum helper, a content-addressed cache, an
-`Hmac`. `blake3Hash` is BLAKE3 wearing that interface, so those call sites can
-change algorithm without changing shape.
+a `package:crypto` `Hash`, such as a checksum helper, a content-addressed cache
+or an `Hmac`. `blake3Hash` is BLAKE3 wearing that interface, which lets those
+call sites change algorithm without changing shape.
 
 ```dart
 import 'package:blake3_ffi/blake3_ffi.dart';
@@ -204,10 +203,11 @@ checksum(bytes, algorithm: blake3Hash); // same function, faster hash
 ```
 
 It behaves the way the interface expects: `blockSize` is 64, the same as
-SHA-256, so `Hmac` pads correctly; `startChunkedConversion` streams through a
-`Blake3Hasher` and releases it on close; and one-shot `convert` skips the sink
-entirely. `Digest` holds 32 bytes, which is BLAKE3's default — for the longer
-outputs BLAKE3 can produce, call `blake3` with `outputLength` instead.
+SHA-256, which is what `Hmac` needs to pad correctly; `startChunkedConversion`
+streams through a `Blake3Hasher` and releases it on close; and one-shot
+`convert` skips the sink entirely. `Digest` holds 32 bytes, which is BLAKE3's
+default; for the longer outputs BLAKE3 can produce, call `blake3` with
+`outputLength` instead.
 
 The digest is the same either way, and a test pins that: if the `Hash` view and
 `blake3()` ever disagreed, the view would quietly be a different algorithm.
