@@ -1,3 +1,10 @@
+## 1.1.2
+
+- `example/xof.dart` calls the extendable output. The README lists XOF among
+  the reasons to take this package over the pure-Dart one, and no example
+  reached it. The one API that decides that comparison had nowhere to be seen
+  running. Docs and example only.
+
 ## 1.1.1
 
 Documentation and packaging only. The API, the native code and the digests are

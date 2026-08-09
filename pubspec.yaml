@@ -6,7 +6,7 @@ name: blake3_ffi
 # for the same reason.
 description: |-
   BLAKE3 hashing for Dart over native FFI: 22x the throughput of the pure-Dart path on bulk data. One-shot, streaming, keyed (MAC), key derivation. C compiled at build.
-version: 1.1.1
+version: 1.1.2
 repository: https://github.com/Yusufihsangorgel/blake3_ffi
 issue_tracker: https://github.com/Yusufihsangorgel/blake3_ffi/issues
 
