@@ -226,6 +226,39 @@ The digest is the same either way, and a test pins that: if the `Hash` view and
   `dispose()` throws `StateError`.
 - Digests are returned as `Uint8List`; `blake3Hex` returns lowercase hex.
 
+## Shipping a standalone binary
+
+`dart compile exe` does not run build hooks, so a program that depends on this
+package stops before it starts:
+
+```
+$ dart compile exe bin/my_cli.dart
+'dart compile' does not support build hooks, use 'dart build' instead.
+```
+
+`dart build cli` runs the hook and lays the pieces out for you:
+
+```
+$ dart build cli
+Generated: build/cli/<os>_<arch>/bundle/bin/my_cli
+$ ls build/cli/macos_arm64/bundle/*
+bin/  my_cli
+lib/  libblake3_ffi.dylib
+```
+
+Ship the whole `bundle/` directory. The executable resolves its library through
+a relative `../lib` path, so a copy of the binary on its own fails at the first
+call:
+
+```
+Failed to load dynamic library '../lib/libblake3_ffi.dylib'
+```
+
+`dart build cli` takes no positional target. With one file under `bin/` the bare
+command is enough; with more than one, pass `-t`. `dart run` and `dart test` are
+unaffected, since both run the hook already. The command is marked preview in
+Dart 3.11.
+
 ## Platform support
 
 Requires Dart 3.10+ with build hooks (`dart run`, `dart test`, and
