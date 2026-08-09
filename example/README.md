@@ -42,7 +42,7 @@ hashing it three ways
   blake3StreamHex(openRead)  held 64.0 KB  9316ce7115ec325adfc088851d929952...
   Blake3Hasher, own buffer   held 64.0 KB  9316ce7115ec325adfc088851d929952...
   verified: all three digests are identical
-  the two streaming paths held 1024x less than the file
+  neither streaming path held more than 64.0 KB, 1024x less than the file
   the native copy is the size of the chunk, so is the gap there
 
 what one flipped bit does

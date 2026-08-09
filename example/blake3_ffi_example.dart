@@ -108,9 +108,13 @@ Future<String> _threeWays(File artifact) async {
     'all three digests are identical',
     oneShot == streamed && streamed == manual.digest,
   );
+  // Quote the larger of the two streaming buffers. openRead() picks its own
+  // chunk size and is free to change it, so deriving the ratio from the loop's
+  // buffer alone would state a number the row above it might not match.
+  final streamingPeak = max(streamHeld, manual.held);
   print(
-    '  the two streaming paths held '
-    '${(oneShotHeld / manual.held).toStringAsFixed(0)}x less than the file',
+    '  neither streaming path held more than ${_size(streamingPeak)}, '
+    '${(oneShotHeld / streamingPeak).toStringAsFixed(0)}x less than the file',
   );
   // updateHasher allocates a native buffer the size of whatever it is given,
   // so the one-shot path pays for the file twice and the loop pays 64 KiB.
