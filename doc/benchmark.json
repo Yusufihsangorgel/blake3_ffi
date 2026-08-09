@@ -1,0 +1,308 @@
+{
+  "generatedAt": "2026-08-08T21:54:45.619366Z",
+  "machine": {
+    "cpu": "Apple M4 Pro",
+    "os": "macos",
+    "osVersion": "Version 26.3 (Build 25D125)",
+    "dart": "3.11.0"
+  },
+  "versions": {
+    "blake3_dart": "1.0.0",
+    "crypto": "3.0.7"
+  },
+  "method": {
+    "batchesPerMeasurement": 5,
+    "placements": 3,
+    "volumePerBulkMeasurementBytes": 134217728,
+    "throughputUnit": "MB/s, 1 MB = 1000000 bytes"
+  },
+  "crossCheck": {
+    "inputLengths": [
+      0,
+      1,
+      63,
+      64,
+      1024,
+      1048576
+    ],
+    "agree": true,
+    "digestOf1MiB": "e302cc32679a6f81c2c999900ebd048de4220e5b584ce0a5215dfd119105f499"
+  },
+  "bulk": [
+    {
+      "inputBytes": 1048576,
+      "candidates": {
+        "blake3_ffi": {
+          "microsPerCall": 472.0156,
+          "throughputMBps": 2221.5,
+          "placementMicros": [
+            472.0156,
+            472.1094,
+            475.0078
+          ],
+          "placementSpread": 0.0063
+        },
+        "crypto sha256": {
+          "microsPerCall": 6309.1328,
+          "throughputMBps": 166.2,
+          "placementMicros": [
+            6315.8516,
+            6310.2813,
+            6309.1328
+          ],
+          "placementSpread": 0.0011
+        },
+        "blake3_dart": {
+          "microsPerCall": 10500.2266,
+          "throughputMBps": 99.9,
+          "placementMicros": [
+            10595.7188,
+            10514.3438,
+            10500.2266
+          ],
+          "placementSpread": 0.0091
+        }
+      },
+      "ratios": {
+        "ffiOverPureDart": 22.2,
+        "ffiOverSha256": 13.4
+      }
+    },
+    {
+      "inputBytes": 16777216,
+      "candidates": {
+        "blake3_ffi": {
+          "microsPerCall": 7537.5,
+          "throughputMBps": 2225.8,
+          "placementMicros": [
+            7574.375,
+            7537.5,
+            7544.75
+          ],
+          "placementSpread": 0.0049
+        },
+        "crypto sha256": {
+          "microsPerCall": 100280.5,
+          "throughputMBps": 167.3,
+          "placementMicros": [
+            100655.75,
+            100813.625,
+            100280.5
+          ],
+          "placementSpread": 0.0053
+        },
+        "blake3_dart": {
+          "microsPerCall": 167154.5,
+          "throughputMBps": 100.4,
+          "placementMicros": [
+            167940.5,
+            167704.5,
+            167154.5
+          ],
+          "placementSpread": 0.0047
+        }
+      },
+      "ratios": {
+        "ffiOverPureDart": 22.2,
+        "ffiOverSha256": 13.3
+      }
+    },
+    {
+      "inputBytes": 67108864,
+      "candidates": {
+        "blake3_ffi": {
+          "microsPerCall": 29787.5,
+          "throughputMBps": 2252.9,
+          "placementMicros": [
+            30034.0,
+            30167.0,
+            29787.5
+          ],
+          "placementSpread": 0.0127
+        },
+        "crypto sha256": {
+          "microsPerCall": 400983.5,
+          "throughputMBps": 167.4,
+          "placementMicros": [
+            401667.0,
+            400983.5,
+            403462.0
+          ],
+          "placementSpread": 0.0062
+        },
+        "blake3_dart": {
+          "microsPerCall": 661337.5,
+          "throughputMBps": 101.5,
+          "placementMicros": [
+            670408.5,
+            663842.5,
+            661337.5
+          ],
+          "placementSpread": 0.0137
+        }
+      },
+      "ratios": {
+        "ffiOverPureDart": 22.2,
+        "ffiOverSha256": 13.5
+      }
+    }
+  ],
+  "small": [
+    {
+      "inputBytes": 64,
+      "candidates": {
+        "blake3_ffi": {
+          "microsPerCall": 0.1899,
+          "throughputMBps": 337.0,
+          "placementMicros": [
+            0.1932,
+            0.1899,
+            0.1908
+          ],
+          "placementSpread": 0.0174
+        },
+        "crypto sha256": {
+          "microsPerCall": 0.8765,
+          "throughputMBps": 73.0,
+          "placementMicros": [
+            0.8778,
+            0.8818,
+            0.8765
+          ],
+          "placementSpread": 0.006
+        },
+        "blake3_dart": {
+          "microsPerCall": 0.665,
+          "throughputMBps": 96.2,
+          "placementMicros": [
+            0.6839,
+            0.6789,
+            0.665
+          ],
+          "placementSpread": 0.0284
+        }
+      },
+      "ratios": {
+        "ffiOverPureDart": 3.5,
+        "ffiOverSha256": 4.6
+      }
+    },
+    {
+      "inputBytes": 256,
+      "candidates": {
+        "blake3_ffi": {
+          "microsPerCall": 0.3286,
+          "throughputMBps": 779.1,
+          "placementMicros": [
+            0.3373,
+            0.3378,
+            0.3286
+          ],
+          "placementSpread": 0.028
+        },
+        "crypto sha256": {
+          "microsPerCall": 2.0189,
+          "throughputMBps": 126.8,
+          "placementMicros": [
+            2.0199,
+            2.069,
+            2.0189
+          ],
+          "placementSpread": 0.0248
+        },
+        "blake3_dart": {
+          "microsPerCall": 2.4694,
+          "throughputMBps": 103.7,
+          "placementMicros": [
+            2.4895,
+            2.4694,
+            2.482
+          ],
+          "placementSpread": 0.0081
+        }
+      },
+      "ratios": {
+        "ffiOverPureDart": 7.5,
+        "ffiOverSha256": 6.1
+      }
+    },
+    {
+      "inputBytes": 1024,
+      "candidates": {
+        "blake3_ffi": {
+          "microsPerCall": 0.9354,
+          "throughputMBps": 1094.7,
+          "placementMicros": [
+            0.9354,
+            0.9533,
+            0.9489
+          ],
+          "placementSpread": 0.0191
+        },
+        "crypto sha256": {
+          "microsPerCall": 6.5735,
+          "throughputMBps": 155.8,
+          "placementMicros": [
+            6.5735,
+            6.6103,
+            6.5956
+          ],
+          "placementSpread": 0.0056
+        },
+        "blake3_dart": {
+          "microsPerCall": 9.5875,
+          "throughputMBps": 106.8,
+          "placementMicros": [
+            9.6259,
+            9.5875,
+            9.6636
+          ],
+          "placementSpread": 0.0079
+        }
+      },
+      "ratios": {
+        "ffiOverPureDart": 10.2,
+        "ffiOverSha256": 7.0
+      }
+    },
+    {
+      "inputBytes": 4096,
+      "candidates": {
+        "blake3_ffi": {
+          "microsPerCall": 2.0062,
+          "throughputMBps": 2041.7,
+          "placementMicros": [
+            2.0062,
+            2.01,
+            2.0509
+          ],
+          "placementSpread": 0.0223
+        },
+        "crypto sha256": {
+          "microsPerCall": 24.8552,
+          "throughputMBps": 164.8,
+          "placementMicros": [
+            24.8552,
+            24.9137,
+            25.0188
+          ],
+          "placementSpread": 0.0066
+        },
+        "blake3_dart": {
+          "microsPerCall": 40.1423,
+          "throughputMBps": 102.0,
+          "placementMicros": [
+            40.1423,
+            40.338,
+            40.4826
+          ],
+          "placementSpread": 0.0085
+        }
+      },
+      "ratios": {
+        "ffiOverPureDart": 20.0,
+        "ffiOverSha256": 12.4
+      }
+    }
+  ]
+}

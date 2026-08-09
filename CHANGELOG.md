@@ -1,3 +1,38 @@
+## 1.1.1
+
+Documentation and packaging only. The API, the native code and the digests are
+untouched.
+
+- **The benchmark tables in the README are written by a tool now, not copied by
+  hand.** The section claimed "nothing here is transcribed by hand" while both
+  tables were hand-copied out of a benchmark run, and the test guarding them
+  looked at one of the seven rows. `tool/readme_tables.dart` writes them from
+  `doc/benchmark.json`, `tool/benchmark_svg.dart` draws the chart through the
+  same helpers so the two cannot round one measurement differently, and
+  `test/published_numbers_test.dart` now covers every published figure: both
+  tables, the prose figures, the pubspec caption and the chart text. Six
+  deliberate edits, one published figure each and two of them in rows the old
+  test never read, all fail it.
+- Input sizes are labelled in binary units. A 1,048,576-byte buffer was called
+  "1 MB" one line below "MB means 1,000,000 bytes"; the rows are 1, 16 and
+  64 MiB, and throughput stays in decimal MB/s.
+- The method line said each figure was "the fastest of five batches in each of
+  three orderings". It is the fastest batch of the fastest placement, which is
+  a stronger claim than the sentence made; the README and the chart both say
+  that now.
+- "Gave up web and mobile" understated the cost of the native path: there is no
+  Flutter support on any platform yet, desktop included. The opening paragraph
+  and the advice in "Which BLAKE3 package" say so.
+- A `build/` directory would have been published. The root `.pubignore` shadowed
+  the root `.gitignore` for the tree, so nothing that file excludes was being
+  kept out of the archive; a dry-run with a `build/` directory present listed
+  its files. 1.1.0 shipped clean only because no such directory existed when it
+  was published. The rule moved to `doc/.pubignore`, which keeps the blog images
+  out without disabling anything else.
+- `description` is a literal block rather than a folded one, matching the
+  screenshot caption. A folded block joins its lines with a space, which is how
+  a wrapped "One-shot" once reached pub.dev as "One- shot".
+
 ## 1.1.0
 
 - **Add `blake3Hash`, BLAKE3 as a `package:crypto` `Hash`.** `blake3(bytes)`

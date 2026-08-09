@@ -237,7 +237,7 @@ void main() {
   });
 
   group('large input', () {
-    test('4 MB one-shot equals chunked streaming', () {
+    test('4 MiB one-shot equals chunked streaming', () {
       final data = randomBytes(4 * 1024 * 1024, 99);
       final oneShot = blake3(data);
       final hasher = Blake3Hasher();

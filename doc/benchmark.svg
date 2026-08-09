@@ -1,15 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="360" viewBox="0 0 1100 360" font-family="Menlo, monospace">
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="360" viewBox="0 0 1100 360" font-family="Menlo, monospace" role="img" aria-labelledby="chart-title">
+  <title id="chart-title">Bar chart of hashing throughput at 16 MiB. blake3_ffi (this package), 2226 MB per second; crypto 3.0.7 sha256, 167 MB per second; blake3_dart 1.0.0 (pure Dart), 100 MB per second. That is 22.2 times the pure-Dart path.</title>
   <rect width="1100" height="360" fill="#0B1220"/>
-  <text x="48" y="52" font-size="24" font-weight="bold" fill="#E2E8F0">Hashing throughput (16 MB, higher is better)</text>
-  <text x="48" y="80" font-size="14" fill="#94A3B8">Measured on Apple Silicon (arm64 NEON), Dart 3.11. MB/s.</text>
+  <text x="48" y="52" font-size="24" font-weight="bold" fill="#E2E8F0">BLAKE3 at 16 MiB: native FFI against the pure-Dart path</text>
+  <text x="48" y="80" font-size="14" fill="#94A3B8">Apple M4 Pro, Dart 3.11.0. Fastest of 5 batches in the fastest of 3 placements; MB/s is 1,000,000 bytes per second.</text>
   <g font-size="14">
-    <rect x="270" y="120" width="620" height="30" fill="#38BDF8"/>
-    <text x="60" y="141" fill="#94A3B8">blake3_ffi (native)</text><text x="900" y="141" fill="#38BDF8">2519</text>
-    <rect x="270" y="168" width="48" height="30" fill="#475569"/>
-    <text x="60" y="189" fill="#94A3B8">crypto sha256</text><text x="326" y="189" fill="#E2E8F0">196</text>
-    <rect x="270" y="216" width="45" height="30" fill="#334155"/>
-    <text x="60" y="237" fill="#94A3B8">blake3_dart (pure)</text><text x="323" y="237" fill="#E2E8F0">181</text>
+    <path d="M 300 116 H 896 A 4.0 4.0 0 0 1 900 120 V 136 A 4.0 4.0 0 0 1 896 140 H 300 Z" fill="#38BDF8"/>
+    <text x="288" y="133" text-anchor="end" fill="#94A3B8">blake3_ffi (this package)</text>
+    <text x="912" y="133" fill="#E2E8F0">2226</text>
+    <path d="M 300 164 H 341.1 A 4.0 4.0 0 0 1 345.1 168 V 184 A 4.0 4.0 0 0 1 341.1 188 H 300 Z" fill="#64748B"/>
+    <text x="288" y="181" text-anchor="end" fill="#94A3B8">crypto 3.0.7 sha256</text>
+    <text x="357.1" y="181" fill="#E2E8F0">167</text>
+    <path d="M 300 212 H 323.1 A 4.0 4.0 0 0 1 327.1 216 V 232 A 4.0 4.0 0 0 1 323.1 236 H 300 Z" fill="#64748B"/>
+    <text x="288" y="229" text-anchor="end" fill="#94A3B8">blake3_dart 1.0.0 (pure Dart)</text>
+    <text x="339.1" y="229" fill="#E2E8F0">100</text>
   </g>
-  <text x="48" y="300" font-size="13.5" fill="#64748B">About 13x the throughput of dart:core sha256 and of the pure-Dart BLAKE3, from the</text>
-  <text x="48" y="320" font-size="13.5" fill="#64748B">same NEON kernel the reference implementation uses. Verified against the official test vectors.</text>
+  <line x1="300" y1="104" x2="300" y2="248" stroke="#64748B" stroke-width="1"/>
+  <text x="48" y="300" font-size="13.5" fill="#94A3B8">22.2x the pure-Dart path and 13.3x SHA-256, out of the same NEON kernel the reference implementation ships.</text>
+  <text x="48" y="320" font-size="13.5" fill="#94A3B8">Both BLAKE3 rows return identical digests; bench/bench.dart checks that before it times anything.</text>
 </svg>

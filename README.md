@@ -14,6 +14,11 @@ prebuilt binary to ship.
 - Keyed hashing (a MAC / PRF) and key derivation (KDF).
 - Extendable output (XOF): request any number of output bytes.
 
+Dart also has a pure-Dart BLAKE3. On a 16 MiB buffer this package ran at 22x its
+throughput, for the same digest, and gave up everything but the Dart VM on
+desktop to get there: no web, and no Flutter yet on any platform.
+[Which one to take](#which-blake3-package).
+
 ```dart
 import 'dart:convert';
 import 'package:blake3_ffi/blake3_ffi.dart';
@@ -56,56 +61,92 @@ below).
 
 ## What BLAKE3 is, and why native
 
-BLAKE3 is a modern cryptographic hash function. It is a tree hash, so a
-single input is split into chunks that can be compressed independently.
-On top of that, its compression function maps cleanly onto SIMD
-instructions, which lets one core hash several chunks at once. A pure-Dart
-implementation cannot reach those instructions, so the throughput gap is
-large on bulk data. This package compiles the reference C implementation
-and, on arm64, its NEON kernel, so you get that throughput from Dart.
+BLAKE3 is a modern cryptographic hash function. It is a tree hash: a single
+input is split into chunks that can be compressed independently. On top of
+that, its compression function maps cleanly onto SIMD instructions, which lets
+one core hash several chunks at once. Those instructions are what a pure-Dart
+implementation cannot reach, and that is where the throughput gap on bulk data
+comes from. This package compiles the reference C implementation and, on arm64,
+its NEON kernel.
 
 BLAKE3 is not a password hash. For passwords use a memory-hard function
 (Argon2, scrypt). BLAKE3 is for content addressing, deduplication,
 integrity checks, MACs, and key derivation.
 
+## Which BLAKE3 package
+
+Dart has two. [`blake3_dart`][blake3_dart] is pure Dart: no toolchain, and it
+runs everywhere Dart does, web and Flutter mobile included. This package
+compiles the reference C instead. That buys throughput and costs reach: it
+needs a C compiler at build time and targets Linux, macOS and Windows on the
+Dart VM — not Flutter, on any platform, until build hooks are stable there.
+
+At 16 MiB on an Apple M4 Pro, this package hashed 2226 MB/s against 100 MB/s for
+the pure-Dart path (blake3_dart 1.0.0): a factor of 22. Both return the same
+digest, and `bench/bench.dart` verifies that before it times anything.
+
+Take the pure-Dart package if you need web, mobile, or any Flutter app today,
+or if a build-time C toolchain is not something you want in your pipeline. Take
+this one for bulk hashing on desktop and server, where that gap is the whole
+point.
+
+[blake3_dart]: https://pub.dev/packages/blake3_dart
+
 ## Performance, honestly
 
-Measured with `bench/bench.dart` on an Apple M4 Pro (macOS 26.3, arm64
-NEON, Dart 3.11.0, Apple clang 21). The baseline is SHA-256 from the
-`crypto` package, the usual pure-Dart choice today. Your numbers will
-differ by machine and architecture; run the benchmark on your own data
+`bench/bench.dart` measures, and writes `doc/benchmark.json`. The two tables
+below are written from that file by `tool/readme_tables.dart`, and the chart is
+drawn from it by `tool/benchmark_svg.dart`. The figures this section quotes in
+prose, the ones in the pubspec's screenshot caption and the ones on the chart
+are all checked against that same file by `test/published_numbers_test.dart`,
+so a number that drifts fails the build instead of reaching a reader. Your own
+numbers will differ by machine and architecture; run the benchmark on your data
 before drawing conclusions.
 
-![BLAKE3 throughput vs sha256 and pure-Dart](https://raw.githubusercontent.com/Yusufihsangorgel/blake3_ffi/main/doc/benchmark.png)
+![BLAKE3 throughput against pure Dart and SHA-256](https://raw.githubusercontent.com/Yusufihsangorgel/blake3_ffi/main/doc/benchmark.png)
 
 ![Architecture: Dart to FFI to native BLAKE3](https://raw.githubusercontent.com/Yusufihsangorgel/blake3_ffi/main/doc/architecture.png)
 
-Bulk throughput:
+<!-- benchmark:begin -->
+Measured on Apple M4 Pro, macOS 26.3 (Build 25D125), Dart 3.11.0, against
+blake3_dart 1.0.0 and crypto 3.0.7. Each figure is the fastest of 5 batches in
+the fastest of 3 placements. Input sizes are powers of two, so 1 MiB is
+1,048,576 bytes; throughput is decimal, so 1 MB/s is 1,000,000 bytes per second.
 
-| Input | BLAKE3 (this package) | SHA-256 (`crypto`) | Speedup |
-|---|---|---|---|
-| 1 MB | 2451 MB/s | 174 MB/s | 14.0x |
-| 16 MB | 2519 MB/s | 181 MB/s | 13.9x |
-| 64 MB | 2490 MB/s | 177 MB/s | 14.0x |
+Bulk throughput, MB/s:
 
-Bulk throughput is essentially flat from 1 MB up: once the input clears BLAKE3's
-internal block size, the per-call and FFI overheads are already amortized, so all
-three rows land near 14x. (An earlier version of this table showed 1 MB at 7.2x;
-that was a benchmark artifact — `bench/bench.dart` hashed only a few megabytes at
-that size, too little to average out scheduling jitter, and the fixed benchmark
-now scales the iteration count so every size hashes a comparable total volume.)
+| Input | this package | blake3_dart 1.0.0 | crypto 3.0.7 SHA-256 | vs pure Dart | vs SHA-256 |
+|---|---|---|---|---|---|
+| 1 MiB | 2221 | 100 | 166 | 22.2x | 13.4x |
+| 16 MiB | 2226 | 100 | 167 | 22.2x | 13.3x |
+| 64 MiB | 2253 | 101 | 167 | 22.2x | 13.5x |
 
-Small inputs (time per call, including FFI overhead):
+Small inputs, microseconds per call including FFI overhead:
 
-| Input | BLAKE3 | SHA-256 | Speedup |
-|---|---|---|---|
-| 64 B | 0.17 µs | 0.81 µs | 4.7x |
-| 1 KB | 0.86 µs | 6.23 µs | 7.2x |
-| 4 KB | 1.79 µs | 23.6 µs | 13.2x |
+| Input | this package | blake3_dart 1.0.0 | crypto 3.0.7 SHA-256 | vs pure Dart | vs SHA-256 |
+|---|---|---|---|---|---|
+| 64 B | 0.19 | 0.67 | 0.88 | 3.5x | 4.6x |
+| 256 B | 0.33 | 2.47 | 2.02 | 7.5x | 6.1x |
+| 1 KiB | 0.94 | 9.59 | 6.57 | 10.2x | 7.0x |
+| 4 KiB | 2.01 | 40.14 | 24.86 | 20.0x | 12.4x |
+<!-- benchmark:end -->
 
-The win holds at every size measured here, so there is no small-input
-crossover where the FFI call cost dominates. The largest wins are on bulk
-data, which is where BLAKE3's SIMD tree hashing pays off.
+Bulk throughput is flat from 1 MiB up. The 64-byte row is an upper bound on
+what a call costs before any hashing happens, and a 1 MiB call costs three
+orders of magnitude more, so what these rows measure is the kernel rather than
+the call.
+
+There is no small-input crossover where the FFI call cost takes the win back:
+even at 64 bytes, where that cost is most of the work, the native path stays
+ahead. The margin then widens with size, which is where the SIMD tree hashing
+pays off.
+
+Two caveats. Ordering barely mattered here: the spread across the three
+placements was under 0.6% at 16 MiB, and `doc/benchmark.json` records it per
+row. Absolute throughput still tracks machine state, which makes the ratios the
+durable part. And this is one arm64 machine, where the NEON kernel is compiled
+in; on x86-64 the portable C kernel runs instead (see
+[Platform support](#platform-support)) and these figures do not carry over.
 
 ## Keyed hashing and key derivation
 

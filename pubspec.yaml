@@ -1,9 +1,12 @@
 name: blake3_ffi
-description: >-
-  BLAKE3 hashing for Dart over native FFI, up to 14x faster than SHA-256. One-
-  shot, streaming, keyed (MAC), and key derivation. C auto-compiled at build, no
-  binaries to ship.
-version: 1.1.0
+# Literal `|-`, one line: pub.dev renders this verbatim, and a folded `>-`
+# block joins its lines with a space, which is how "One-\nshot" reached pub.dev
+# as "One- shot" once. Keeping it unwrapped removes the hazard rather than
+# asking the next edit to remember it. The screenshot caption below is literal
+# for the same reason.
+description: |-
+  BLAKE3 hashing for Dart over native FFI: 22x the throughput of the pure-Dart path on bulk data. One-shot, streaming, keyed (MAC), key derivation. C compiled at build.
+version: 1.1.1
 repository: https://github.com/Yusufihsangorgel/blake3_ffi
 issue_tracker: https://github.com/Yusufihsangorgel/blake3_ffi/issues
 
@@ -15,9 +18,10 @@ topics:
   - performance
 
 screenshots:
-  - description: >-
-      Hashing throughput over 16 MB, measured on Apple Silicon: 2519 MB/s
-      against 196 for dart:core sha256 and 181 for pure-Dart BLAKE3.
+  # Numbers come from doc/benchmark.json via bench/bench.dart, and
+  # test/published_numbers_test.dart fails if they drift from it.
+  - description: |-
+      Hashing throughput at 16 MiB on an Apple M4 Pro: 2226 MB/s, against 100 for blake3_dart 1.0.0 (pure Dart) and 167 for SHA-256 from crypto 3.0.7.
     path: doc/benchmark.png
 
 environment:
@@ -47,5 +51,9 @@ dependencies:
   native_toolchain_c: '>=0.19.2 <0.20.0'
 
 dev_dependencies:
+  # Benchmark baseline only (bench/bench.dart): the pure-Dart BLAKE3 the
+  # README compares against. Pinned exactly so a published throughput number
+  # always names the build it came from.
+  blake3_dart: 1.0.0
   lints: ^6.0.0
   test: ^1.25.0
