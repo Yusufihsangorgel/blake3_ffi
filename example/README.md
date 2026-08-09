@@ -1,47 +1,69 @@
 # blake3_ffi examples
 
-## The four everyday operations
+## Verifying a download nobody watched arrive
 
-`blake3_ffi_example.dart` covers the four things the package does: hash a buffer
-in one call, hash a large file in a stream without holding it in memory, compute
-a keyed MAC, and derive a purpose-bound subkey from a shared secret.
+`blake3_ffi_example.dart` takes one job end to end. A release artifact is
+sitting on disk and the question is whether it is the bytes the publisher meant
+to ship. That splits into three questions, and the file answers them in order.
 
-```dart
-// One-shot hash, straight to hex.
-print(blake3Hex(utf8.encode('The quick brown fox jumps over the lazy dog')));
+**Can you hash a file you do not want to hold?** It stages a 64 MiB artifact in
+a temporary directory and hashes it three ways: `blake3Hex` over the whole
+buffer, the `blake3StreamHex(openRead())` one-liner, and a hand-written
+`Blake3Hasher` loop over one reused 64 KiB buffer. All three print the digest
+they agree on, next to the bytes each one had to hold at once. The 1024-to-1 gap
+between the first row and the other two is what the package claims over the
+pure-Dart `blake3_dart`, whose exported API has no incremental entry point.
 
-// Streaming: feed a file 64 KiB at a time so memory stays flat at any size.
-final hasher = Blake3Hasher();
-hasher.update(chunk);         // any number of times
-final digest = hasher.finalizeHex();
-hasher.dispose();
+**What does one flipped bit do?** It flips bit 0 of the byte at the middle of
+the file, re-hashes, and counts how many of the 64 hex characters moved. The
+file keeps its length and still opens, which is the reason silent corruption is
+worth a hash in the first place. Flipping the bit back has to restore the
+original digest, and the run fails loudly if it does not.
 
-// Keyed hashing (a MAC): both sides share a 32-byte key.
-print(blake3KeyedHex(key, message));
+**Is a digest even the right tool?** Whoever can replace an artifact can also
+recompute the digest published beside it. The last block puts three values side
+by side: the plain digest, a tag under a shared release key, and a tag under a
+key that is wrong in one byte.
 
-// Key derivation: a shared secret plus a context string becomes a subkey.
-print(blake3DeriveKeyHex('example.com 2026 session cookie v1', secret));
-```
-
-Run it:
+Nothing here touches the network, and nothing lands in your checkout: the
+artifact comes out of a deterministic PRNG into `Directory.systemTemp`, and the
+directory is removed on the way out. Every run stages the same bytes, so the
+digests below are the digests you will get.
 
 ```
 dart run example/blake3_ffi_example.dart
 ```
 
-Output (the `this file` line is the hash of the example's own source, so it
-changes if the file does; the rest are fixed test vectors):
-
 ```
-blake3("...dog") = 2f1514181aadccd913abd94cfa592701a5686ab23f8df1dff1b74710febc6d4a
-this file        = <hash of this source file>
-keyed("...dog")  = f1c78a63454ec51f42b9d88ac49133942182b5ecb380dc9ec90dcd7e6ad675e8
-derived key      = fdd449d5d0a0ccab6a584896574ce5157c26cd55b7af506f858c769e515d4c32
+staged 64.0 MB to verify, 1024 blocks of 64.0 KB
+
+hashing it three ways
+  blake3Hex(bytes)           held 64.0 MB  9316ce7115ec325adfc088851d929952...
+  blake3StreamHex(openRead)  held 64.0 KB  9316ce7115ec325adfc088851d929952...
+  Blake3Hasher, own buffer   held 64.0 KB  9316ce7115ec325adfc088851d929952...
+  verified: all three digests are identical
+  the two streaming paths held 1024x less than the file
+  the native copy is the size of the chunk, so is the gap there
+
+what one flipped bit does
+  bit 0 of the byte at offset 33554432 of 67108864
+  digest                     3fa09fa4db758ca69c3243edd2af5893...
+  62 of 64 hex characters differ from the digest above
+  verified: flipping the bit back restores the original digest
+
+a digest anyone can recompute, a tag only a key holder can
+  digest             9316ce7115ec325adfc088851d929952...
+  tag, release key   b8b92745ccc71532bd64c620ff681a00...
+  tag, wrong key     5137c72a90f9cd0b214edb0e5ee27423...  one byte off in the key
+  verified: neither tag equals the digest, and the two tags differ
+
+next: bench/bench.dart for throughput, example/xof.dart for reading past 32 bytes
 ```
 
-The streaming `hashFile` helper in the example is the pattern for anything too
-big to hold in memory: open the file, `update` in fixed-size chunks, `finalizeHex`,
-`dispose`. See the package README for the throughput this runs at.
+The `verified:` lines are real checks over the full 64 characters, not over the
+truncated hex printed above them, and they throw rather than warn. Key
+derivation and reading past 32 bytes are in `xof.dart` next; the throughput this
+runs at is in `bench/bench.dart`, at the end.
 
 ## Reading more than 32 bytes
 
