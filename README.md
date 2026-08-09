@@ -1,11 +1,12 @@
 # blake3_ffi
 
-![blake3_ffi banner](https://raw.githubusercontent.com/Yusufihsangorgel/blake3_ffi/main/doc/banner.png)
-
 Fast BLAKE3 cryptographic hashing for Dart, backed by the official BLAKE3
 C implementation over FFI. The native code is compiled automatically at
 build time through Dart build hooks; there is nothing to install and no
 prebuilt binary to ship.
+
+![The benchmark running: throughput for BLAKE3 against SHA-256 from `package:crypto`
+and a pure-Dart BLAKE3, across input sizes from a few kilobytes upward](https://raw.githubusercontent.com/Yusufihsangorgel/blake3_ffi/main/doc/demo.gif)
 
 - One-shot hashing of a byte buffer.
 - Incremental (streaming) hashing for data that arrives in pieces or does
