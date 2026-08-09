@@ -8,6 +8,36 @@ prebuilt binary to ship.
 ![The benchmark running: throughput for BLAKE3 against SHA-256 from `package:crypto`
 and a pure-Dart BLAKE3, across input sizes from a few kilobytes upward](https://raw.githubusercontent.com/Yusufihsangorgel/blake3_ffi/main/doc/demo.gif)
 
+## Why this instead of what you already have
+
+**Instead of `package:crypto` or `hashlib`.** Neither implements BLAKE3.
+Grepping the installed sources for `blake3` returns nothing in either one; the
+same grep for `blake2` returns ten files in `hashlib`, including
+`lib/src/blake2s.dart` and `lib/src/blake2b.dart`, so the search itself works.
+`hashlib` is the strongest pure-Dart hashing package on pub.dev at 160/160
+points, and it still stops at BLAKE2.
+
+**Instead of `blake3_dart`.** It does implement BLAKE3 in pure Dart, with
+keyed mode and key derivation, so this is not a capability gap. Two things
+differ. Its library file exports six whole-buffer functions and nothing else
+(`lib/blake3_dart.dart`); the `HashContext` class that holds `update` and
+`finalize` sits at `lib/src/blake3_compact.dart:187` and is not exported, so a
+caller has to hold an entire file in memory as one `Uint8List`. This package
+exports `Blake3Hasher` (`lib/src/hasher.dart:36`) and `blake3Stream`
+(`lib/src/functions.dart:117`). On identical buffers, with digests
+cross-checked between the two implementations, `bench/bench.dart` measures
+2318 MB/s against 102 at 1 MiB.
+
+**Reach for it when**
+
+- You hash large files or streams and SHA-256 is the bottleneck you measured.
+- You want a MAC and a KDF from the same primitive without a second dependency.
+- You checksum build artifacts or uploads from a server or CLI.
+
+**Skip it** if you need SHA-256 for interoperability or compliance, or you are
+shipping to mobile or web: `pubspec.yaml` declares Linux, macOS, and Windows
+only.
+
 - One-shot hashing of a byte buffer.
 - Incremental (streaming) hashing for data that arrives in pieces or does
   not fit in memory, either through `Blake3Hasher` or the one-call
@@ -40,36 +70,6 @@ void main() {
   }
 }
 ```
-
-## Why this instead of what you already have
-
-**Instead of `package:crypto` or `hashlib`.** Neither implements BLAKE3.
-Grepping the installed sources for `blake3` returns nothing in either one; the
-same grep for `blake2` returns ten files in `hashlib`, including
-`lib/src/blake2s.dart` and `lib/src/blake2b.dart`, so the search itself works.
-`hashlib` is the strongest pure-Dart hashing package on pub.dev at 160/160
-points, and it still stops at BLAKE2.
-
-**Instead of `blake3_dart`.** It does implement BLAKE3 in pure Dart, with
-keyed mode and key derivation, so this is not a capability gap. Two things
-differ. Its library file exports six whole-buffer functions and nothing else
-(`lib/blake3_dart.dart`); the `HashContext` class that holds `update` and
-`finalize` sits at `lib/src/blake3_compact.dart:187` and is not exported, so a
-caller has to hold an entire file in memory as one `Uint8List`. This package
-exports `Blake3Hasher` (`lib/src/hasher.dart:36`) and `blake3Stream`
-(`lib/src/functions.dart:117`). On identical buffers, with digests
-cross-checked between the two implementations, `bench/bench.dart` measures
-2318 MB/s against 102 at 1 MiB.
-
-**Reach for it when**
-
-- You hash large files or streams and SHA-256 is the bottleneck you measured.
-- You want a MAC and a KDF from the same primitive without a second dependency.
-- You checksum build artifacts or uploads from a server or CLI.
-
-**Skip it** if you need SHA-256 for interoperability or compliance, or you are
-shipping to mobile or web: `pubspec.yaml` declares Linux, macOS, and Windows
-only.
 
 ## Hashing a file or stream
 
