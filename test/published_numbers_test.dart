@@ -46,8 +46,8 @@ void main() {
   test('the README tables are the ones tool/readme_tables.dart writes', () {
     final readme = File('README.md').readAsStringSync();
     expect(
-      _generatedBlock(readme),
-      renderBlock(report),
+      _lf(_generatedBlock(readme)),
+      _lf(renderBlock(report)),
       reason:
           'README.md has drifted from doc/benchmark.json. '
           'Run `dart run tool/readme_tables.dart`.',
@@ -185,6 +185,13 @@ void main() {
 /// single-spaced copy keeps these checks about the words rather than about
 /// where the wrap happens to fall. The pubspec is matched raw instead, because
 /// there a phrase split across lines is the bug being watched for.
+/// Normalises line endings before a block comparison.
+///
+/// `StringBuffer.writeln` always writes `\n`, and a Windows checkout can hand
+/// back the same file with `\r\n`. Comparing the two raw turned the suite red
+/// on one runner out of three for a difference that is not in the content.
+String _lf(String text) => text.replaceAll('\r\n', '\n');
+
 String _unwrapped(String text) => text.replaceAll(RegExp(r'\s+'), ' ');
 
 /// The part of README.md that tool/readme_tables.dart owns.
