@@ -184,6 +184,9 @@ final tail = Blake3Hasher()
 // tail.finalize(seek: 32, outputLength: 32) == long bytes 32..63
 ```
 
+`example/xof.dart` runs that comparison and checks it over every byte, then
+reads a cipher key, a MAC key and a short key id out of one derive-key pass.
+
 ## Dropping into code that takes a `Hash`
 
 `blake3(bytes)` is the direct way to hash here and it stays the shortest one.
