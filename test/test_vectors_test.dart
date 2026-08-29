@@ -14,9 +14,9 @@ import 'package:test/test.dart';
 /// modes. Implementations must match both the extended output and its
 /// first 32 bytes.
 void main() {
-  final vectors =
-      jsonDecode(File('test/test_vectors.json').readAsStringSync())
-          as Map<String, dynamic>;
+  final vectors = jsonDecode(
+    File('test/test_vectors.json').readAsStringSync(),
+  ) as Map<String, dynamic>;
   final key = Uint8List.fromList(utf8.encode(vectors['key'] as String));
   final context = vectors['context_string'] as String;
   final cases = (vectors['cases'] as List).cast<Map<String, dynamic>>();
