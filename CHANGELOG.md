@@ -1,3 +1,10 @@
+## 1.2.4
+
+- `code_assets` moved to `^2.0.0`. The 1.x constraint costs a pub.dev
+  scorecard point once the grace period on the 2.0.0 release expires. 2.0.0
+  also validates the bundled library's header against the target
+  architecture, which this package gets for free by moving.
+
 ## 1.2.3
 
 - The drop-in `Hash` swap now sits at the top of the README. The reason to

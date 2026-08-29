@@ -6,7 +6,7 @@ name: blake3_ffi
 # for the same reason.
 description: |-
   BLAKE3 hashing for Dart over native FFI: 22x the throughput of the pure-Dart path on bulk data. One-shot, streaming, keyed (MAC), key derivation. C compiled at build.
-version: 1.2.3
+version: 1.2.4
 repository: https://github.com/Yusufihsangorgel/blake3_ffi
 issue_tracker: https://github.com/Yusufihsangorgel/blake3_ffi/issues
 
@@ -45,7 +45,7 @@ dependencies:
   # Only for the `Hash` view in lib/src/crypto_hash.dart. Pure Dart, and
   # already in most dependency trees.
   crypto: ^3.0.0
-  code_assets: ^1.2.1
+  code_assets: ^2.0.0
   ffi: ^2.1.0
   hooks: '>=2.0.2 <3.0.0'
   native_toolchain_c: '>=0.19.2 <0.20.0'
