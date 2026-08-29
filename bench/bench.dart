@@ -361,8 +361,9 @@ String _resolvedVersion(String package) {
   for (final entry
       in (decoded['packages']! as List<Object?>).cast<Map<String, Object?>>()) {
     if (entry['name'] != package) continue;
-    final match = RegExp('$package-([^/]+)')
-        .firstMatch(entry['rootUri'].toString());
+    final match = RegExp(
+      '$package-([^/]+)',
+    ).firstMatch(entry['rootUri'].toString());
     return match?.group(1) ?? 'unknown';
   }
   return 'unknown';
