@@ -1,0 +1,16 @@
+# blake3_ffi
+
+|- BLAKE3 hashing for Dart over native FFI: 22x the throughput of the pure-Dart path on bulk data. One-shot, streaming, keyed (MAC), key derivation. C compiled at build.
+
+pub.dev: https://pub.dev/packages/blake3_ffi
+source: https://github.com/Yusufihsangorgel/blake3_ffi
+
+## Before you call it
+
+README.md carries the usage, the measured comparison against the alternatives, and a note on when not to reach for this package.
+
+## Layout
+
+- `lib/` — public API
+- `example/` — runnable examples
+- `test/` — the suite; `dart test` (or `flutter test`) runs it
