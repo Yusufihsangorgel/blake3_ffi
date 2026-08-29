@@ -1,3 +1,14 @@
+## 1.2.3
+
+- The drop-in `Hash` swap now sits at the top of the README. The reason to
+  take this package into code you do not own is that `blake3Hash` implements
+  `package:crypto`'s `Hash`, not that it is fast, and that was a section
+  below the fold. The example is the `sha256` line a caller already has and
+  the one argument that makes it BLAKE3. It also says where the swap does
+  not apply: output longer than 32 bytes, and keyed BLAKE3, which is not
+  HMAC. A test now pins `Hmac(blake3Hash, key)` to RFC 2104 over `blake3()`;
+  the official BLAKE3 vectors have no HMAC answers.
+
 ## 1.2.2
 
 - The section on why to reach for this rather than the alternative now sits

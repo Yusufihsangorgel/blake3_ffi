@@ -51,6 +51,7 @@ void main() {
 `blake3` / `blake3Hex` hash a `Uint8List`. `blake3StreamHex(File(path).openRead())`
 hashes without holding the file. `blake3Hash.convert` returns a 32-byte `Digest`;
 longer output is `blake3(..., outputLength: ...)`. Hex is lowercase.
+`blake3Hash.blockSize` is 64, same as SHA-256.
 
 ## Contracts
 

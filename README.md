@@ -5,6 +5,32 @@ C implementation over FFI. The native code is compiled automatically at
 build time through Dart build hooks; there is nothing to install and no
 prebuilt binary to ship.
 
+## Drop-in for `package:crypto`'s `Hash`
+
+`blake3Hash` implements that interface. A checksum helper, an `Hmac`,
+anything typed against `Hash` can take it without changing shape. The
+`sha256` line a reader has today:
+
+```dart
+import 'package:crypto/crypto.dart';
+
+Digest checksum(List<int> bytes, {Hash algorithm = sha256}) =>
+    algorithm.convert(bytes);
+```
+
+The swap is one argument:
+
+```dart
+import 'package:blake3_ffi/blake3_ffi.dart';
+
+checksum(bytes, algorithm: blake3Hash);
+```
+
+It does not apply when you need more than 32 bytes of output (`Digest` has
+no room for BLAKE3's extendable output; use `blake3` with `outputLength`),
+or when you want keyed BLAKE3: `Hmac(blake3Hash, key)` is HMAC, not
+`blake3Keyed`.
+
 ![The benchmark running: throughput for BLAKE3 against SHA-256 from `package:crypto`
 and a pure-Dart BLAKE3, across input sizes from a few kilobytes upward](https://raw.githubusercontent.com/Yusufihsangorgel/blake3_ffi/main/doc/demo.gif)
 
@@ -217,34 +243,6 @@ final tail = Blake3Hasher()
 
 `example/xof.dart` runs that comparison and checks it over every byte, then
 reads a cipher key, a MAC key and a short key id out of one derive-key pass.
-
-## Dropping into code that takes a `Hash`
-
-`blake3(bytes)` is the direct way to hash here and it stays the shortest one.
-The case this section is about is different: code you did not write that takes
-a `package:crypto` `Hash`, such as a checksum helper, a content-addressed cache
-or an `Hmac`. `blake3Hash` is BLAKE3 wearing that interface, which lets those
-call sites change algorithm without changing shape.
-
-```dart
-import 'package:blake3_ffi/blake3_ffi.dart';
-import 'package:crypto/crypto.dart';
-
-Digest checksum(List<int> bytes, {Hash algorithm = sha256}) =>
-    algorithm.convert(bytes);
-
-checksum(bytes, algorithm: blake3Hash); // same function, faster hash
-```
-
-It behaves the way the interface expects: `blockSize` is 64, the same as
-SHA-256, which is what `Hmac` needs to pad correctly; `startChunkedConversion`
-streams through a `Blake3Hasher` and releases it on close; and one-shot
-`convert` skips the sink entirely. `Digest` holds 32 bytes, which is BLAKE3's
-default; for the longer outputs BLAKE3 can produce, call `blake3` with
-`outputLength` instead.
-
-The digest is the same either way, and a test pins that: if the `Hash` view and
-`blake3()` ever disagreed, the view would quietly be a different algorithm.
 
 ## API notes
 
