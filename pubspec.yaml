@@ -4,8 +4,7 @@ name: blake3_ffi
 # as "One- shot" once. Keeping it unwrapped removes the hazard rather than
 # asking the next edit to remember it. The screenshot caption below is literal
 # for the same reason.
-description: |-
-  BLAKE3 hashing for Dart over native FFI: 22x the throughput of the pure-Dart path on bulk data. One-shot, streaming, keyed (MAC), key derivation. C compiled at build.
+description: "BLAKE3 hashing for Dart via native FFI, with one-shot and streaming hashes, keyed MAC and key derivation. Compiles C code at build time."
 version: 1.2.5
 repository: https://github.com/Yusufihsangorgel/blake3_ffi
 issue_tracker: https://github.com/Yusufihsangorgel/blake3_ffi/issues
@@ -13,9 +12,9 @@ issue_tracker: https://github.com/Yusufihsangorgel/blake3_ffi/issues
 topics:
   - blake3
   - hashing
-  - cryptography
-  - ffi
-  - performance
+  - keyed-hash
+  - key-derivation
+  - streaming-hash
 
 screenshots:
   # Numbers come from doc/benchmark.json via bench/bench.dart, and
