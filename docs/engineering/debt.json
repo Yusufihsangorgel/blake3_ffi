@@ -68,7 +68,19 @@
           "lines": "14-18"
         },
         {
-          "path": "src/third_party/blake3/blake3_{sse2,sse41,avx2,avx512}.c",
+          "path": "src/third_party/blake3/blake3_sse2.c",
+          "lines": null
+        },
+        {
+          "path": "src/third_party/blake3/blake3_sse41.c",
+          "lines": null
+        },
+        {
+          "path": "src/third_party/blake3/blake3_avx2.c",
+          "lines": null
+        },
+        {
+          "path": "src/third_party/blake3/blake3_avx512.c",
           "lines": null
         }
       ],

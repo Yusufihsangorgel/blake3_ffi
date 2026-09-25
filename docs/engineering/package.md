@@ -1,6 +1,6 @@
 # Package engineering rules: blake3_ffi
 
-Rules-Version: blake3_ffi/73e3baba35632ba9b57544ad7ad03f4a4fdc192a4185c393cdbd8af399110d3b
+Rules-Version: blake3_ffi/f2989ecd0c309540e5d1a095d9e921667d5ad8da2fd05874869043ba1268c921
 Core-Version: 1
 Core-Digest: 1825fa7ff346dca23e65b1b3bf9b2e3e06959f1414bae9952d596d2f62f09b8f
 Survey-Digest: f90f45c8a172068c3ed3b9488ba5a7cb4e58efa93c380d2d9a70b399349ec35e
