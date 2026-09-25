@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "package": "blake3_ffi",
+  "survey_digest": "f90f45c8a172068c3ed3b9488ba5a7cb4e58efa93c380d2d9a70b399349ec35e",
+  "items": [
+    {
+      "id": "blake3_ffi-D001",
+      "source_index": 1,
+      "source_item_digest": "97505c8174f6c797295db40091944ded85ffcbe2781c756fe8e67861e698e27c",
+      "baseline_revision": "32494b8",
+      "status": "open",
+      "size": "small",
+      "locations": [
+        {
+          "path": "lib/src/functions.dart",
+          "lines": "31-46,66-75"
+        },
+        {
+          "path": "lib/src/hasher.dart",
+          "lines": "52-69,78-89"
+        }
+      ],
+      "kind": "duplicated logic",
+      "observation": "Keyed initialization (key length check + key buffer + init) and KDF context initialization (utf8 + buffer + init) are written verbatim in both the one-shot functions and the factories.",
+      "certainty": "confirmed",
+      "proposed_fix": "Helpers in hasher.dart: `_checkKey`, `initKeyed(Pointer<Void>, Uint8List)`, `initDeriveKey(Pointer<Void>, String)`; both paths call them. The test vectors must pass unchanged.",
+      "related_rule_ids": [
+        "blake3_ffi/B3-15"
+      ],
+      "issue_url": null,
+      "closure_criteria": "Both the one-shot functions and the factories obtain keyed and KDF initialization through shared _checkKey, initKeyed and initDeriveKey helpers in hasher.dart. test/test_vectors_test.dart passes unchanged.",
+      "review_trigger": "Before modifying the affected code",
+      "resolution": null
+    },
+    {
+      "id": "blake3_ffi-D002",
+      "source_index": 2,
+      "source_item_digest": "2ed7505cc57cf1019e8152abf413d8c38e08e821017997003caa5b1dc575ddfb",
+      "baseline_revision": "32494b8",
+      "status": "open",
+      "size": "small",
+      "locations": [
+        {
+          "path": "lib/src/functions.dart",
+          "lines": "124"
+        }
+      ],
+      "kind": "redundant code",
+      "observation": "`Blake3Hasher.update` already performs the `chunk is Uint8List ? chunk : Uint8List.fromList(chunk)` conversion (hasher.dart:106-109).",
+      "certainty": "confirmed",
+      "proposed_fix": "`hasher.update(chunk)`.",
+      "related_rule_ids": [],
+      "issue_url": null,
+      "closure_criteria": "lib/src/functions.dart passes chunk directly to hasher.update with no local Uint8List.fromList conversion.",
+      "review_trigger": "Before modifying the affected code",
+      "resolution": null
+    },
+    {
+      "id": "blake3_ffi-D003",
+      "source_index": 3,
+      "source_item_digest": "91967e2d9fa64454bb13eed7d93a73173496ff12ac1bfc38d1de6edb348a6d2c",
+      "baseline_revision": "32494b8",
+      "status": "open",
+      "size": "large",
+      "locations": [
+        {
+          "path": "hook/build.dart",
+          "lines": "14-18"
+        },
+        {
+          "path": "src/third_party/blake3/blake3_{sse2,sse41,avx2,avx512}.c",
+          "lines": null
+        }
+      ],
+      "kind": "vendored dead source / deferred performance",
+      "observation": "The x86 SIMD kernels are vendored and published in the package but not compiled; x86_64 users run the portable kernel. There is no tracked record (issue or plan).",
+      "certainty": "confirmed",
+      "proposed_fix": "Enter it in the debt register. Compile when native_toolchain_c supports per-file flags or with separate static CBuilders; until then consider removing it from the published archive.",
+      "related_rule_ids": [
+        "blake3_ffi/B3-10",
+        "blake3_ffi/B3-11"
+      ],
+      "issue_url": null,
+      "closure_criteria": "The deferred x86 SIMD work is tracked in the debt register or the unused vendored kernels are removed from the published archive. A later compile of the kernels ships with test/test_vectors_test.dart green and x86 targets in the CI matrix.",
+      "review_trigger": "Before modifying the affected code",
+      "resolution": null
+    },
+    {
+      "id": "blake3_ffi-D004",
+      "source_index": 4,
+      "source_item_digest": "f63136069ab0ab8c953e20ed6810cfd7f7a2077d377b2247eb6b066ff331bfd8",
+      "baseline_revision": "32494b8",
+      "status": "open",
+      "size": "small",
+      "locations": [
+        {
+          "path": "analysis_options.yaml",
+          "lines": "1"
+        }
+      ],
+      "kind": "analysis strictness",
+      "observation": "Only recommended; the strict modes and public_member_api_docs are off.",
+      "certainty": "confirmed",
+      "proposed_fix": "Turn on the image_ffi settings and fix the resulting diagnostics.",
+      "related_rule_ids": [],
+      "issue_url": null,
+      "closure_criteria": "analysis_options.yaml enables strict-casts, strict-inference, strict-raw-types and public_member_api_docs and dart analyze reports no new diagnostics.",
+      "review_trigger": "Before modifying the affected code",
+      "resolution": null
+    }
+  ]
+}

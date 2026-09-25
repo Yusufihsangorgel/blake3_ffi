@@ -111,3 +111,7 @@ longer output is `blake3(..., outputLength: ...)`. Hex is lowercase.
 - Examples: `dart run example/blake3_ffi_example.dart`, `dart run example/xof.dart`.
 - Numbers: `dart run bench/bench.dart` writes `doc/benchmark.json`.
 - Needs Dart 3.10+ and a C toolchain (Xcode CLT, gcc/clang, or MSVC).
+
+## Contributing
+
+Before changing this repository, read [CONTRIBUTING.md](CONTRIBUTING.md), [package engineering rules](docs/engineering/package.md), and the [debt register](docs/engineering/debt.json). These requirements apply to every contributor. The usage guidance above remains the consumer contract.
