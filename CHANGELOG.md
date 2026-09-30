@@ -10,6 +10,8 @@
   the benchmark table.
 - The example output labels sizes as MiB and KiB, which is what the numbers
   are.
+- "Why this instead of what you already have" now has a table that says when
+  to take this package and when to take `package:crypto` SHA-256.
 
 ## 1.2.5
 

@@ -50,15 +50,22 @@ exports `Blake3Hasher` (`lib/src/hasher.dart:36`) and `blake3Stream`
 cross-checked between the two implementations, `bench/bench.dart` measures
 2221 MB/s against 100 at 1 MiB.
 
-**Reach for it when**
+**When to use it, against `package:crypto`'s SHA-256**
 
-- You hash large files or streams and SHA-256 is the bottleneck you measured.
-- You want a MAC and a KDF from the same primitive without a second dependency.
-- You checksum build artifacts or uploads from a server or CLI.
+| Your situation | Take |
+|---|---|
+| You hash large files or streams and SHA-256 is the bottleneck you measured. `blake3Stream` reads a `Stream<List<int>>` and never holds the whole file in memory. | This package. See [Performance, honestly](#performance-honestly). |
+| You use the digest for content addressing, deduplication, or checksums that your own system computes on both sides. | This package. |
+| You want a MAC, a key derivation function, or output longer than 32 bytes from one primitive. `package:crypto` documents HMAC and has no key derivation or extendable output. | This package. |
+| A published checksum, a protocol, or a compliance rule names SHA-256. The digest must be SHA-256 and BLAKE3 is a different function. | `package:crypto`. It also offers SHA-1, SHA-384, SHA-512, and MD5 for the same case. |
+| The code runs on web, Flutter, iOS, or Android. `pubspec.yaml` here declares Linux, macOS, and Windows only. | `package:crypto`. Its `lib/` has no `dart:io` or `dart:ffi` import and its pubspec lists no platform restriction. |
+| You cannot have a C toolchain in your build, or you ship with `dart compile exe`, which does not run build hooks (see [Shipping a standalone binary](#shipping-a-standalone-binary)). | `package:crypto`. It is pure Dart. |
+| You hash small inputs now and then and hashing is not your bottleneck. | Either. This package is ahead in the small-input table, but small calls take microseconds with both, which rarely justifies a native build step. |
 
-**Skip it** if you need SHA-256 for interoperability or compliance, or you are
-shipping to mobile or web: `pubspec.yaml` declares Linux, macOS, and Windows
-only.
+If you already take a `Hash` (a checksum helper, an `Hmac`), you can try this
+package without touching that code by passing `blake3Hash`, as shown at the top.
+
+**What it covers.**
 
 - One-shot hashing of a byte buffer.
 - Incremental (streaming) hashing for data that arrives in pieces or does
