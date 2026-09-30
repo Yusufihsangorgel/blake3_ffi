@@ -35,14 +35,14 @@ dart run example/blake3_ffi_example.dart
 ```
 
 ```
-staged 64.0 MB to verify, 1024 blocks of 64.0 KB
+staged 64.0 MiB to verify, 1024 blocks of 64.0 KiB
 
 hashing it three ways
-  blake3Hex(bytes)           held 64.0 MB  9316ce7115ec325adfc088851d929952...
-  blake3StreamHex(openRead)  held 64.0 KB  9316ce7115ec325adfc088851d929952...
-  Blake3Hasher, own buffer   held 64.0 KB  9316ce7115ec325adfc088851d929952...
+  blake3Hex(bytes)           held 64.0 MiB  9316ce7115ec325adfc088851d929952...
+  blake3StreamHex(openRead)  held 64.0 KiB  9316ce7115ec325adfc088851d929952...
+  Blake3Hasher, own buffer   held 64.0 KiB  9316ce7115ec325adfc088851d929952...
   verified: all three digests are identical
-  neither streaming path held more than 64.0 KB, 1024x less than the file
+  neither streaming path held more than 64.0 KiB, 1024x less than the file
   the native copy is the size of the chunk, so is the gap there
 
 what one flipped bit does

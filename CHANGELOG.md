@@ -1,3 +1,16 @@
+## 1.2.6
+
+- The README no longer says there is nothing to install. It now says a C
+  toolchain must be available, as the Platform support section already did.
+- Removed the comparison with `hashlib` and its score, which nothing in the
+  repository backed.
+- The keyed hashing snippet now shows its imports, including
+  `dart:typed_data` for `Uint8List`.
+- The 1 MiB figures in "Why this instead of what you already have" now match
+  the benchmark table.
+- The example output labels sizes as MiB and KiB, which is what the numbers
+  are.
+
 ## 1.2.5
 
 - The build hook returns early when a build does not request code assets.

@@ -9,7 +9,7 @@
 ///
 /// Nothing here touches the network. The artifact is generated into a
 /// temporary directory from a deterministic PRNG, so every run stages the
-/// same 64 MB and prints the same digests, and the directory is removed on
+/// same 64 MiB and prints the same digests, and the directory is removed on
 /// the way out.
 ///
 ///     dart run example/blake3_ffi_example.dart
@@ -263,8 +263,8 @@ String _short(String hex) => '${hex.substring(0, 32)}...';
 /// Sizes in the units the numbers were chosen in: 1024-based.
 String _size(int bytes) {
   if (bytes >= 1024 * 1024) {
-    return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+    return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MiB';
   }
-  if (bytes >= 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
+  if (bytes >= 1024) return '${(bytes / 1024).toStringAsFixed(1)} KiB';
   return '$bytes bytes';
 }

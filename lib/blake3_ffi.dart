@@ -1,7 +1,7 @@
 /// Fast BLAKE3 cryptographic hashing for Dart via native FFI.
 ///
 /// The vendored BLAKE3 C implementation is compiled automatically at build
-/// time through Dart build hooks; there is nothing to install.
+/// time through Dart build hooks. A C toolchain must be available.
 ///
 /// - [blake3] / [blake3Hex] hash a byte buffer in one call.
 /// - [Blake3Hasher] hashes incrementally (streaming).

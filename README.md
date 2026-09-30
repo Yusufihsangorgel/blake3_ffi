@@ -2,8 +2,8 @@
 
 Fast BLAKE3 cryptographic hashing for Dart, backed by the official BLAKE3
 C implementation over FFI. The native code is compiled automatically at
-build time through Dart build hooks; there is nothing to install and no
-prebuilt binary to ship.
+build time through Dart build hooks. A C toolchain must be available (see
+[Platform support](#platform-support)), and no prebuilt binary is needed.
 
 ## Drop-in for `package:crypto`'s `Hash`
 
@@ -36,12 +36,8 @@ and a pure-Dart BLAKE3, across input sizes from a few kilobytes upward](https://
 
 ## Why this instead of what you already have
 
-**Instead of `package:crypto` or `hashlib`.** Neither implements BLAKE3.
-Grepping the installed sources for `blake3` returns nothing in either one; the
-same grep for `blake2` returns ten files in `hashlib`, including
-`lib/src/blake2s.dart` and `lib/src/blake2b.dart`, so the search itself works.
-`hashlib` is the strongest pure-Dart hashing package on pub.dev at 160/160
-points, and it still stops at BLAKE2.
+**What this package provides.** One-shot, streaming, keyed, and
+key-derivation BLAKE3 APIs backed by the reference C implementation.
 
 **Instead of `blake3_dart`.** It does implement BLAKE3 in pure Dart, with
 keyed mode and key derivation, so this is not a capability gap. Two things
@@ -52,7 +48,7 @@ caller has to hold an entire file in memory as one `Uint8List`. This package
 exports `Blake3Hasher` (`lib/src/hasher.dart:36`) and `blake3Stream`
 (`lib/src/functions.dart:117`). On identical buffers, with digests
 cross-checked between the two implementations, `bench/bench.dart` measures
-2318 MB/s against 102 at 1 MiB.
+2221 MB/s against 100 at 1 MiB.
 
 **Reach for it when**
 
@@ -210,6 +206,11 @@ Keyed mode turns BLAKE3 into a MAC or PRF. The key must be exactly 32
 bytes.
 
 ```dart
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:blake3_ffi/blake3_ffi.dart';
+
 final key = Uint8List(32); // a real, secret 32-byte key
 final tag = blake3Keyed(key, utf8.encode('message'));
 ```
