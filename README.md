@@ -1,5 +1,9 @@
 # blake3_ffi
 
+**Status:** no new releases are planned. For web, mobile and Flutter, the
+pure-Dart [`blake3_dart`](https://pub.dev/packages/blake3_dart) returns the same
+digests, as [Which BLAKE3 package](#which-blake3-package) explains.
+
 Fast BLAKE3 cryptographic hashing for Dart, backed by the official BLAKE3
 C implementation over FFI. The native code is compiled automatically at
 build time through Dart build hooks. A C toolchain must be available (see
