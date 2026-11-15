@@ -1,8 +1,8 @@
 # blake3_ffi
 
-**Status:** no new releases are planned. For web, mobile and Flutter, the
-pure-Dart [`blake3_dart`](https://pub.dev/packages/blake3_dart) returns the same
-digests, as [Which BLAKE3 package](#which-blake3-package) explains.
+**Status:** no new releases are planned. For web and mobile, the pure-Dart
+[`blake3_dart`](https://pub.dev/packages/blake3_dart) returns the same digests,
+as [Which BLAKE3 package](#which-blake3-package) explains.
 
 Fast BLAKE3 cryptographic hashing for Dart, backed by the official BLAKE3
 C implementation over FFI. The native code is compiled automatically at
@@ -62,7 +62,7 @@ cross-checked between the two implementations, `bench/bench.dart` measures
 | You use the digest for content addressing, deduplication, or checksums that your own system computes on both sides. | This package. |
 | You want a MAC, a key derivation function, or output longer than 32 bytes from one primitive. `package:crypto` documents HMAC and has no key derivation or extendable output. | This package. |
 | A published checksum, a protocol, or a compliance rule names SHA-256. The digest must be SHA-256 and BLAKE3 is a different function. | `package:crypto`. It also offers SHA-1, SHA-384, SHA-512, and MD5 for the same case. |
-| The code runs on web, Flutter, iOS, or Android. `pubspec.yaml` here declares Linux, macOS, and Windows only. | `package:crypto`. Its `lib/` has no `dart:io` or `dart:ffi` import and its pubspec lists no platform restriction. |
+| The code runs on web, iOS, or Android. `pubspec.yaml` here declares Linux, macOS, and Windows only. | `package:crypto`. Its `lib/` has no `dart:io` or `dart:ffi` import and its pubspec lists no platform restriction. |
 | You cannot have a C toolchain in your build, or you ship with `dart compile exe`, which does not run build hooks (see [Shipping a standalone binary](#shipping-a-standalone-binary)). | `package:crypto`. It is pure Dart. |
 | You hash small inputs now and then and hashing is not your bottleneck. | Either. This package is ahead in the small-input table, but small calls take microseconds with both, which rarely justifies a native build step. |
 
@@ -79,8 +79,8 @@ package without touching that code by passing `blake3Hash`, as shown at the top.
 - Extendable output (XOF): request any number of output bytes.
 
 Dart also has a pure-Dart BLAKE3. On a 16 MiB buffer this package ran at 22x its
-throughput, for the same digest, and gave up everything but the Dart VM on
-desktop to get there: no web, and no Flutter yet on any platform.
+throughput, for the same digest, and supports only Linux, macOS and Windows to
+get there.
 [Which one to take](#which-blake3-package).
 
 ```dart
@@ -143,13 +143,14 @@ Dart has two. [`blake3_dart`][blake3_dart] is pure Dart: no toolchain, and it
 runs everywhere Dart does, web and Flutter mobile included. This package
 compiles the reference C instead. That buys throughput and costs reach: it
 needs a C compiler at build time and targets Linux, macOS and Windows on the
-Dart VM. Flutter is out on every platform until build hooks are stable there.
+Dart VM. Build hooks are stable from Flutter 3.38, but CI here covers no
+Flutter build.
 
 At 16 MiB on an Apple M4 Pro, this package hashed 2226 MB/s against 100 MB/s for
 the pure-Dart path (blake3_dart 1.0.0): a factor of 22. Both return the same
 digest, and `bench/bench.dart` verifies that before it times anything.
 
-Take the pure-Dart package if you need web, mobile, or any Flutter app today,
+Take the pure-Dart package if you need web or mobile,
 or if a build-time C toolchain is not something you want in your pipeline. Take
 this one for bulk hashing on desktop and server, where that gap is the whole
 point.
@@ -319,9 +320,8 @@ Correctness is identical on both paths: every target passes the official
 BLAKE3 test vectors. The difference is throughput. The x86-64 SIMD kernels
 (SSE2/SSE4.1/AVX2/AVX512) are vendored in `src/third_party/blake3/` but not
 yet compiled, because they need per-source compiler flags the build system
-cannot express per file today; enabling them is planned for a later
-release. There is no Flutter, iOS, or Android support yet; it arrives when
-build hooks land in stable Flutter.
+cannot express per file. No release is planned that enables them. The pubspec
+declares no iOS or Android support, and CI covers no Flutter build.
 
 ## Correctness
 
